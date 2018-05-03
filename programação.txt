@@ -1,0 +1,13 @@
+00001 00000000000000000 1. 100.1 200.3 300.10 se agora_argumentos 10 menor_que 30 deu_de_argumentos facha
+texto "lucas" "sao mateus" #ainda nao esta pronto
+deu
+int lucas igual_a 100.1
+real mateus igual_a 200
+enquanto agora_argumentos 10 maior_que 20 deu_argumentos faca
+lucas igual_a 120 deu
+
+real novovalor igual_a lucas mais mateus 
+
+123jsadhsf 
+
+ 
