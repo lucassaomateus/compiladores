@@ -1,0 +1,212 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    KW_FOR
+    ERRADO
+    t_OP_MUL
+    KW_FPUNC
+    OP_ATRIB
+    t_KW_FUNC_ARGS_SEP
+    t_OP_ADD
+    KW_INT
+    t_OP_ATRIB
+    t_OP_LOG_OR
+    t_KW_FUNCTION
+    t_OP_LOG_NOT
+    KW_ELSE
+    t_KW_FUNC_OPEN
+    OP_LOG_BT
+    TRUE
+    KW_IF_OPEN
+    t_KW_FPUNC
+    t_KW_FOR_OPEN
+    OP_LOG_BT_EKW_FUNC_OPEN
+    KW_IF_CLOSE
+    t_OP_SUB
+    KW_PRINT
+    t_OP_LOG_AND
+    t_PAR_OPEN
+    KW_FLOAT
+    IDENTIFIER
+    KW_FUNC_OPEN_ARGS
+    STRING
+    OP_LOG_OR
+    t_KW_FOR_CLOSE
+    KW_INPUT
+    t_OP_LOG_DIFF
+    t_OP_DIV
+    t_OP_EXP
+    ID
+    t_OP_LOG_LT
+    OP_DIV1
+    t_OP_LOG_LT_E
+    t_OP_LOG_EQUAL
+    KW_FUNC_CLOSE
+    FALSE
+    t_OP_LOG_BT_E
+    t_OP_INC
+    t_KW_IF_OPEN
+    t_OP_DEC
+    t_OP_LOG_BT
+    OP_LOG_LT_E
+    t_KW_FUNC_OPEN_ARGS
+    t_PAR_CLOSE
+
+Grammar
+
+Rule 0     S' -> expressao
+Rule 1     expressao -> EOF
+Rule 2     expressao -> programa
+Rule 3     expressao -> empty
+Rule 4     expressao -> statement
+Rule 5     expressao -> statement_list ignore
+Rule 6     expressao -> statement_list ignore statement
+Rule 7     expressao -> statement_list
+Rule 8     expressao -> statement_list statement
+Rule 9     statement -> expressao
+Rule 10    statement -> KW_STRING
+Rule 11    statement -> Return PAR_OPEN return_expression PAR_CLOSE
+Rule 12    statement -> KW_FOR_OPEN PAR_OPEN expressao relational_expression expressao PAR_CLOSE KW_FOR_CLOSE statement
+Rule 13    statement -> KW_IF PAR_OPEN relational_expression PAR_CLOSE statement
+Rule 14    statement -> KW_WHILE PAR_OPEN relational_expression PAR_CLOSE statement
+Rule 15    expressao -> KW_FUNCTION VAR PAR_OPEN opt_parameter_list PAR_CLOSE ignore opt_auto_define_list statement_list
+Rule 16    expressao -> parameter_list
+Rule 17    expressao -> return_expresao
+Rule 18    expressao -> define_list KW_FUNC_ARGS_SEP VAR
+Rule 19    expressao -> define_list ignore
+Rule 20    expressao -> define_list
+Rule 21    expressao -> term
+Rule 22    expressao -> define_list KW_FUNC_ARGS_SEP term
+Rule 23    expressao -> argument_list
+Rule 24    expressao -> named_expressao
+Rule 25    expressao -> VAR KW_FUNC_ARGS_SEP argument_list
+Rule 26    expressao -> expressao
+Rule 27    expressao -> OP_LOG_EQUAL expressao
+Rule 28    expressao -> OP_LOG_DIFF expressao
+Rule 29    expressao -> OP_LOG_LT expressao
+Rule 30    expressao -> OP_LOG_GE expressao
+Rule 31    expressao -> OP_LOG_GT expressao
+Rule 32    expressao -> OP_LOG_LE expressao
+Rule 33    expressao -> VAR
+Rule 34    expressao -> p_named_expressao
+Rule 35    expressao -> INT_NUMBER
+Rule 36    expressao -> INT_NUMBER expressao
+Rule 37    expressao -> FLOAT_NUMBER expressao
+Rule 38    expressao -> FLOAT_NUMBER
+Rule 39    expressao -> PAR_OPEN expressao PAR_CLOSE
+Rule 40    expressao -> OP_LOG_NOT expressao
+Rule 41    expressao -> expressao OP_ADD expressao
+Rule 42    expressao -> expressao OP_SUB expressao
+Rule 43    expressao -> expressao OP_MUL expressao
+Rule 44    expressao -> expressao OP_LOG_AND expressao
+Rule 45    expressao -> named_expressao OP_INC
+Rule 46    expressao -> named_expressao OP_DEC
+Rule 47    expressao -> named_expressao OP_EXP expressao
+Rule 48    expressao -> PAR_CLOSE
+Rule 49    expressao -> VAR expressao
+Rule 50    expressao -> factor
+
+Terminals, with rules where they appear
+
+ERRADO               : 
+FALSE                : 
+FLOAT_NUMBER         : 37 38
+ID                   : 
+IDENTIFIER           : 
+INT_NUMBER           : 35 36
+KW_ELSE              : 
+KW_FLOAT             : 
+KW_FOR               : 
+KW_FOR_CLOSE         : 12
+KW_FOR_OPEN          : 12
+KW_FPUNC             : 
+KW_FUNCTION          : 15
+KW_FUNC_ARGS_SEP     : 18 22 25
+KW_FUNC_CLOSE        : 
+KW_FUNC_OPEN_ARGS    : 
+KW_IF                : 13
+KW_IF_CLOSE          : 
+KW_IF_OPEN           : 
+KW_INPUT             : 
+KW_INT               : 
+KW_PRINT             : 
+KW_STRING            : 10
+KW_WHILE             : 14
+OP_ADD               : 41
+OP_ATRIB             : 
+OP_DEC               : 46
+OP_DIV1              : 
+OP_EXP               : 47
+OP_INC               : 45
+OP_LOG_AND           : 44
+OP_LOG_BT            : 
+OP_LOG_BT_EKW_FUNC_OPEN : 
+OP_LOG_DIFF          : 28
+OP_LOG_EQUAL         : 27
+OP_LOG_LT            : 29
+OP_LOG_LT_E          : 
+OP_LOG_NOT           : 40
+OP_LOG_OR            : 
+OP_MUL               : 43
+OP_SUB               : 42
+PAR_CLOSE            : 11 12 13 14 15 39 48
+PAR_OPEN             : 11 12 13 14 15 39
+STRING               : 
+TRUE                 : 
+error                : 
+t_KW_FOR_CLOSE       : 
+t_KW_FOR_OPEN        : 
+t_KW_FPUNC           : 
+t_KW_FUNCTION        : 
+t_KW_FUNC_ARGS_SEP   : 
+t_KW_FUNC_OPEN       : 
+t_KW_FUNC_OPEN_ARGS  : 
+t_KW_IF_OPEN         : 
+t_OP_ADD             : 
+t_OP_ATRIB           : 
+t_OP_DEC             : 
+t_OP_DIV             : 
+t_OP_EXP             : 
+t_OP_INC             : 
+t_OP_LOG_AND         : 
+t_OP_LOG_BT          : 
+t_OP_LOG_BT_E        : 
+t_OP_LOG_DIFF        : 
+t_OP_LOG_EQUAL       : 
+t_OP_LOG_LT          : 
+t_OP_LOG_LT_E        : 
+t_OP_LOG_NOT         : 
+t_OP_LOG_OR          : 
+t_OP_MUL             : 
+t_OP_SUB             : 
+t_PAR_CLOSE          : 
+t_PAR_OPEN           : 
+
+Nonterminals, with rules where they appear
+
+EOF                  : 1
+OP_LOG_GE            : 30
+OP_LOG_GT            : 31
+OP_LOG_LE            : 32
+Return               : 11
+VAR                  : 15 18 25 33 49
+argument_list        : 23 25
+define_list          : 18 19 20 22
+empty                : 3
+expressao            : 9 12 12 26 27 28 29 30 31 32 36 37 39 40 41 41 42 42 43 43 44 44 47 49 0
+factor               : 50
+ignore               : 5 6 15 19
+named_expressao      : 24 45 46 47
+opt_auto_define_list : 15
+opt_parameter_list   : 15
+p_named_expressao    : 34
+parameter_list       : 16
+programa             : 2
+relational_expression : 12 13 14
+return_expresao      : 17
+return_expression    : 11
+statement            : 4 6 8 12 13 14
+statement_list       : 5 6 7 8 15
+term                 : 21 22
+

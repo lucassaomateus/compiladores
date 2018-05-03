@@ -1,5 +1,5 @@
 from ply import yacc
-from AnalisadorLex import tokens
+from Analisador_Lexico import tokens
 
 class BinOp:
     def __init__(self, op, left, right):

@@ -146,7 +146,7 @@ lexer = lex.lex()
 
 # testando////////////////////testanto//////////////////////testanto/////////////////////////
 
-arq = codecs.open('/home/lucas/Desktop/2018 /compiladores/programação.txt', 'r', encoding='utf-8')
+arq = codecs.open('programação.txt', 'r', encoding='utf-8')
 texto = arq.read().encode('utf-8')
 lexer.input(texto)
 
