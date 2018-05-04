@@ -3,40 +3,50 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 Unused terminals:
 
     KW_FOR
+    PAR_CLOSE
+    OP_LOG_AND
     ERRADO
-    t_OP_MUL
-    KW_FPUNC
+    KW_IF_OPEN
     OP_ATRIB
     t_KW_FUNC_ARGS_SEP
-    t_OP_ADD
-    KW_INT
+    KW_FUNC_ARGS_SEP
     t_OP_ATRIB
     t_OP_LOG_OR
     t_KW_FUNCTION
+    OP_INC
     t_OP_LOG_NOT
+    OP_MUL
     KW_ELSE
+    OP_DEC
     t_KW_FUNC_OPEN
     OP_LOG_BT
+    OP_LOG_EQUAL
     TRUE
-    KW_IF_OPEN
+    OP_LOG_NOT
+    EOF
+    OP_EXP
+    KW_FUNCTION
     t_KW_FPUNC
     t_KW_FOR_OPEN
     OP_LOG_BT_EKW_FUNC_OPEN
     KW_IF_CLOSE
-    t_OP_SUB
     KW_PRINT
     t_OP_LOG_AND
-    t_PAR_OPEN
-    KW_FLOAT
+    OP_SUB
     IDENTIFIER
     KW_FUNC_OPEN_ARGS
     STRING
+    KW_FPUNC
     OP_LOG_OR
     t_KW_FOR_CLOSE
     KW_INPUT
+    KW_WHILE
+    KW_FOR_CLOSE
     t_OP_LOG_DIFF
-    t_OP_DIV
+    FLOAT_NUMBER
+    OP_LOG_DIFF
     t_OP_EXP
+    OP_ADD
     ID
     t_OP_LOG_LT
     OP_DIV1
@@ -45,113 +55,77 @@ Unused terminals:
     KW_FUNC_CLOSE
     FALSE
     t_OP_LOG_BT_E
+    PAR_OPEN
     t_OP_INC
     t_KW_IF_OPEN
+    KW_FOR_OPEN
     t_OP_DEC
+    OP_LOG_LT
     t_OP_LOG_BT
     OP_LOG_LT_E
+    INT_NUMBER
     t_KW_FUNC_OPEN_ARGS
-    t_PAR_CLOSE
+    KW_IF
+    KW_STRING
 
 Grammar
 
 Rule 0     S' -> expressao
-Rule 1     expressao -> EOF
-Rule 2     expressao -> programa
-Rule 3     expressao -> empty
-Rule 4     expressao -> statement
-Rule 5     expressao -> statement_list ignore
-Rule 6     expressao -> statement_list ignore statement
-Rule 7     expressao -> statement_list
-Rule 8     expressao -> statement_list statement
-Rule 9     statement -> expressao
-Rule 10    statement -> KW_STRING
-Rule 11    statement -> Return PAR_OPEN return_expression PAR_CLOSE
-Rule 12    statement -> KW_FOR_OPEN PAR_OPEN expressao relational_expression expressao PAR_CLOSE KW_FOR_CLOSE statement
-Rule 13    statement -> KW_IF PAR_OPEN relational_expression PAR_CLOSE statement
-Rule 14    statement -> KW_WHILE PAR_OPEN relational_expression PAR_CLOSE statement
-Rule 15    expressao -> KW_FUNCTION VAR PAR_OPEN opt_parameter_list PAR_CLOSE ignore opt_auto_define_list statement_list
-Rule 16    expressao -> parameter_list
-Rule 17    expressao -> return_expresao
-Rule 18    expressao -> define_list KW_FUNC_ARGS_SEP VAR
-Rule 19    expressao -> define_list ignore
-Rule 20    expressao -> define_list
-Rule 21    expressao -> term
-Rule 22    expressao -> define_list KW_FUNC_ARGS_SEP term
-Rule 23    expressao -> argument_list
-Rule 24    expressao -> named_expressao
-Rule 25    expressao -> VAR KW_FUNC_ARGS_SEP argument_list
-Rule 26    expressao -> expressao
-Rule 27    expressao -> OP_LOG_EQUAL expressao
-Rule 28    expressao -> OP_LOG_DIFF expressao
-Rule 29    expressao -> OP_LOG_LT expressao
-Rule 30    expressao -> OP_LOG_GE expressao
-Rule 31    expressao -> OP_LOG_GT expressao
-Rule 32    expressao -> OP_LOG_LE expressao
-Rule 33    expressao -> VAR
-Rule 34    expressao -> p_named_expressao
-Rule 35    expressao -> INT_NUMBER
-Rule 36    expressao -> INT_NUMBER expressao
-Rule 37    expressao -> FLOAT_NUMBER expressao
-Rule 38    expressao -> FLOAT_NUMBER
-Rule 39    expressao -> PAR_OPEN expressao PAR_CLOSE
-Rule 40    expressao -> OP_LOG_NOT expressao
-Rule 41    expressao -> expressao OP_ADD expressao
-Rule 42    expressao -> expressao OP_SUB expressao
-Rule 43    expressao -> expressao OP_MUL expressao
-Rule 44    expressao -> expressao OP_LOG_AND expressao
-Rule 45    expressao -> named_expressao OP_INC
-Rule 46    expressao -> named_expressao OP_DEC
-Rule 47    expressao -> named_expressao OP_EXP expressao
-Rule 48    expressao -> PAR_CLOSE
-Rule 49    expressao -> VAR expressao
-Rule 50    expressao -> factor
+Rule 1     expressao -> expressao t_OP_ADD termo
+Rule 2     expressao -> expressao t_OP_SUB termo
+Rule 3     expressao -> expressao t_OP_MUL termo
+Rule 4     expressao -> expressao t_OP_DIV termo
+Rule 5     expressao -> termo
+Rule 6     termo -> KW_FLOAT
+Rule 7     termo -> KW_INT
+Rule 8     termo -> t_PAR_OPEN expressao t_PAR_CLOSE
 
 Terminals, with rules where they appear
 
+EOF                  : 
 ERRADO               : 
 FALSE                : 
-FLOAT_NUMBER         : 37 38
+FLOAT_NUMBER         : 
 ID                   : 
 IDENTIFIER           : 
-INT_NUMBER           : 35 36
+INT_NUMBER           : 
 KW_ELSE              : 
-KW_FLOAT             : 
+KW_FLOAT             : 6
 KW_FOR               : 
-KW_FOR_CLOSE         : 12
-KW_FOR_OPEN          : 12
+KW_FOR_CLOSE         : 
+KW_FOR_OPEN          : 
 KW_FPUNC             : 
-KW_FUNCTION          : 15
-KW_FUNC_ARGS_SEP     : 18 22 25
+KW_FUNCTION          : 
+KW_FUNC_ARGS_SEP     : 
 KW_FUNC_CLOSE        : 
 KW_FUNC_OPEN_ARGS    : 
-KW_IF                : 13
+KW_IF                : 
 KW_IF_CLOSE          : 
 KW_IF_OPEN           : 
 KW_INPUT             : 
-KW_INT               : 
+KW_INT               : 7
 KW_PRINT             : 
-KW_STRING            : 10
-KW_WHILE             : 14
-OP_ADD               : 41
+KW_STRING            : 
+KW_WHILE             : 
+OP_ADD               : 
 OP_ATRIB             : 
-OP_DEC               : 46
+OP_DEC               : 
 OP_DIV1              : 
-OP_EXP               : 47
-OP_INC               : 45
-OP_LOG_AND           : 44
+OP_EXP               : 
+OP_INC               : 
+OP_LOG_AND           : 
 OP_LOG_BT            : 
 OP_LOG_BT_EKW_FUNC_OPEN : 
-OP_LOG_DIFF          : 28
-OP_LOG_EQUAL         : 27
-OP_LOG_LT            : 29
+OP_LOG_DIFF          : 
+OP_LOG_EQUAL         : 
+OP_LOG_LT            : 
 OP_LOG_LT_E          : 
-OP_LOG_NOT           : 40
+OP_LOG_NOT           : 
 OP_LOG_OR            : 
-OP_MUL               : 43
-OP_SUB               : 42
-PAR_CLOSE            : 11 12 13 14 15 39 48
-PAR_OPEN             : 11 12 13 14 15 39
+OP_MUL               : 
+OP_SUB               : 
+PAR_CLOSE            : 
+PAR_OPEN             : 
 STRING               : 
 TRUE                 : 
 error                : 
@@ -163,10 +137,10 @@ t_KW_FUNC_ARGS_SEP   :
 t_KW_FUNC_OPEN       : 
 t_KW_FUNC_OPEN_ARGS  : 
 t_KW_IF_OPEN         : 
-t_OP_ADD             : 
+t_OP_ADD             : 1
 t_OP_ATRIB           : 
 t_OP_DEC             : 
-t_OP_DIV             : 
+t_OP_DIV             : 4
 t_OP_EXP             : 
 t_OP_INC             : 
 t_OP_LOG_AND         : 
@@ -178,35 +152,229 @@ t_OP_LOG_LT          :
 t_OP_LOG_LT_E        : 
 t_OP_LOG_NOT         : 
 t_OP_LOG_OR          : 
-t_OP_MUL             : 
-t_OP_SUB             : 
-t_PAR_CLOSE          : 
-t_PAR_OPEN           : 
+t_OP_MUL             : 3
+t_OP_SUB             : 2
+t_PAR_CLOSE          : 8
+t_PAR_OPEN           : 8
 
 Nonterminals, with rules where they appear
 
-EOF                  : 1
-OP_LOG_GE            : 30
-OP_LOG_GT            : 31
-OP_LOG_LE            : 32
-Return               : 11
-VAR                  : 15 18 25 33 49
-argument_list        : 23 25
-define_list          : 18 19 20 22
-empty                : 3
-expressao            : 9 12 12 26 27 28 29 30 31 32 36 37 39 40 41 41 42 42 43 43 44 44 47 49 0
-factor               : 50
-ignore               : 5 6 15 19
-named_expressao      : 24 45 46 47
-opt_auto_define_list : 15
-opt_parameter_list   : 15
-p_named_expressao    : 34
-parameter_list       : 16
-programa             : 2
-relational_expression : 12 13 14
-return_expresao      : 17
-return_expression    : 11
-statement            : 4 6 8 12 13 14
-statement_list       : 5 6 7 8 15
-term                 : 21 22
+expressao            : 1 2 3 4 8 0
+termo                : 1 2 3 4 5
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . expressao
+    (1) expressao -> . expressao t_OP_ADD termo
+    (2) expressao -> . expressao t_OP_SUB termo
+    (3) expressao -> . expressao t_OP_MUL termo
+    (4) expressao -> . expressao t_OP_DIV termo
+    (5) expressao -> . termo
+    (6) termo -> . KW_FLOAT
+    (7) termo -> . KW_INT
+    (8) termo -> . t_PAR_OPEN expressao t_PAR_CLOSE
+
+    KW_FLOAT        shift and go to state 5
+    KW_INT          shift and go to state 2
+    t_PAR_OPEN      shift and go to state 3
+
+    termo                          shift and go to state 4
+    expressao                      shift and go to state 1
+
+state 1
+
+    (0) S' -> expressao .
+    (1) expressao -> expressao . t_OP_ADD termo
+    (2) expressao -> expressao . t_OP_SUB termo
+    (3) expressao -> expressao . t_OP_MUL termo
+    (4) expressao -> expressao . t_OP_DIV termo
+
+    t_OP_ADD        shift and go to state 6
+    t_OP_SUB        shift and go to state 9
+    t_OP_MUL        shift and go to state 7
+    t_OP_DIV        shift and go to state 8
+
+
+state 2
+
+    (7) termo -> KW_INT .
+
+    t_PAR_CLOSE     reduce using rule 7 (termo -> KW_INT .)
+    t_OP_ADD        reduce using rule 7 (termo -> KW_INT .)
+    t_OP_SUB        reduce using rule 7 (termo -> KW_INT .)
+    t_OP_MUL        reduce using rule 7 (termo -> KW_INT .)
+    t_OP_DIV        reduce using rule 7 (termo -> KW_INT .)
+    $end            reduce using rule 7 (termo -> KW_INT .)
+
+
+state 3
+
+    (8) termo -> t_PAR_OPEN . expressao t_PAR_CLOSE
+    (1) expressao -> . expressao t_OP_ADD termo
+    (2) expressao -> . expressao t_OP_SUB termo
+    (3) expressao -> . expressao t_OP_MUL termo
+    (4) expressao -> . expressao t_OP_DIV termo
+    (5) expressao -> . termo
+    (6) termo -> . KW_FLOAT
+    (7) termo -> . KW_INT
+    (8) termo -> . t_PAR_OPEN expressao t_PAR_CLOSE
+
+    KW_FLOAT        shift and go to state 5
+    KW_INT          shift and go to state 2
+    t_PAR_OPEN      shift and go to state 3
+
+    termo                          shift and go to state 4
+    expressao                      shift and go to state 10
+
+state 4
+
+    (5) expressao -> termo .
+
+    t_PAR_CLOSE     reduce using rule 5 (expressao -> termo .)
+    t_OP_ADD        reduce using rule 5 (expressao -> termo .)
+    t_OP_SUB        reduce using rule 5 (expressao -> termo .)
+    t_OP_MUL        reduce using rule 5 (expressao -> termo .)
+    t_OP_DIV        reduce using rule 5 (expressao -> termo .)
+    $end            reduce using rule 5 (expressao -> termo .)
+
+
+state 5
+
+    (6) termo -> KW_FLOAT .
+
+    t_PAR_CLOSE     reduce using rule 6 (termo -> KW_FLOAT .)
+    t_OP_ADD        reduce using rule 6 (termo -> KW_FLOAT .)
+    t_OP_SUB        reduce using rule 6 (termo -> KW_FLOAT .)
+    t_OP_MUL        reduce using rule 6 (termo -> KW_FLOAT .)
+    t_OP_DIV        reduce using rule 6 (termo -> KW_FLOAT .)
+    $end            reduce using rule 6 (termo -> KW_FLOAT .)
+
+
+state 6
+
+    (1) expressao -> expressao t_OP_ADD . termo
+    (6) termo -> . KW_FLOAT
+    (7) termo -> . KW_INT
+    (8) termo -> . t_PAR_OPEN expressao t_PAR_CLOSE
+
+    KW_FLOAT        shift and go to state 5
+    KW_INT          shift and go to state 2
+    t_PAR_OPEN      shift and go to state 3
+
+    termo                          shift and go to state 11
+
+state 7
+
+    (3) expressao -> expressao t_OP_MUL . termo
+    (6) termo -> . KW_FLOAT
+    (7) termo -> . KW_INT
+    (8) termo -> . t_PAR_OPEN expressao t_PAR_CLOSE
+
+    KW_FLOAT        shift and go to state 5
+    KW_INT          shift and go to state 2
+    t_PAR_OPEN      shift and go to state 3
+
+    termo                          shift and go to state 12
+
+state 8
+
+    (4) expressao -> expressao t_OP_DIV . termo
+    (6) termo -> . KW_FLOAT
+    (7) termo -> . KW_INT
+    (8) termo -> . t_PAR_OPEN expressao t_PAR_CLOSE
+
+    KW_FLOAT        shift and go to state 5
+    KW_INT          shift and go to state 2
+    t_PAR_OPEN      shift and go to state 3
+
+    termo                          shift and go to state 13
+
+state 9
+
+    (2) expressao -> expressao t_OP_SUB . termo
+    (6) termo -> . KW_FLOAT
+    (7) termo -> . KW_INT
+    (8) termo -> . t_PAR_OPEN expressao t_PAR_CLOSE
+
+    KW_FLOAT        shift and go to state 5
+    KW_INT          shift and go to state 2
+    t_PAR_OPEN      shift and go to state 3
+
+    termo                          shift and go to state 14
+
+state 10
+
+    (8) termo -> t_PAR_OPEN expressao . t_PAR_CLOSE
+    (1) expressao -> expressao . t_OP_ADD termo
+    (2) expressao -> expressao . t_OP_SUB termo
+    (3) expressao -> expressao . t_OP_MUL termo
+    (4) expressao -> expressao . t_OP_DIV termo
+
+    t_PAR_CLOSE     shift and go to state 15
+    t_OP_ADD        shift and go to state 6
+    t_OP_SUB        shift and go to state 9
+    t_OP_MUL        shift and go to state 7
+    t_OP_DIV        shift and go to state 8
+
+
+state 11
+
+    (1) expressao -> expressao t_OP_ADD termo .
+
+    t_PAR_CLOSE     reduce using rule 1 (expressao -> expressao t_OP_ADD termo .)
+    t_OP_ADD        reduce using rule 1 (expressao -> expressao t_OP_ADD termo .)
+    t_OP_SUB        reduce using rule 1 (expressao -> expressao t_OP_ADD termo .)
+    t_OP_MUL        reduce using rule 1 (expressao -> expressao t_OP_ADD termo .)
+    t_OP_DIV        reduce using rule 1 (expressao -> expressao t_OP_ADD termo .)
+    $end            reduce using rule 1 (expressao -> expressao t_OP_ADD termo .)
+
+
+state 12
+
+    (3) expressao -> expressao t_OP_MUL termo .
+
+    t_PAR_CLOSE     reduce using rule 3 (expressao -> expressao t_OP_MUL termo .)
+    t_OP_ADD        reduce using rule 3 (expressao -> expressao t_OP_MUL termo .)
+    t_OP_SUB        reduce using rule 3 (expressao -> expressao t_OP_MUL termo .)
+    t_OP_MUL        reduce using rule 3 (expressao -> expressao t_OP_MUL termo .)
+    t_OP_DIV        reduce using rule 3 (expressao -> expressao t_OP_MUL termo .)
+    $end            reduce using rule 3 (expressao -> expressao t_OP_MUL termo .)
+
+
+state 13
+
+    (4) expressao -> expressao t_OP_DIV termo .
+
+    t_PAR_CLOSE     reduce using rule 4 (expressao -> expressao t_OP_DIV termo .)
+    t_OP_ADD        reduce using rule 4 (expressao -> expressao t_OP_DIV termo .)
+    t_OP_SUB        reduce using rule 4 (expressao -> expressao t_OP_DIV termo .)
+    t_OP_MUL        reduce using rule 4 (expressao -> expressao t_OP_DIV termo .)
+    t_OP_DIV        reduce using rule 4 (expressao -> expressao t_OP_DIV termo .)
+    $end            reduce using rule 4 (expressao -> expressao t_OP_DIV termo .)
+
+
+state 14
+
+    (2) expressao -> expressao t_OP_SUB termo .
+
+    t_PAR_CLOSE     reduce using rule 2 (expressao -> expressao t_OP_SUB termo .)
+    t_OP_ADD        reduce using rule 2 (expressao -> expressao t_OP_SUB termo .)
+    t_OP_SUB        reduce using rule 2 (expressao -> expressao t_OP_SUB termo .)
+    t_OP_MUL        reduce using rule 2 (expressao -> expressao t_OP_SUB termo .)
+    t_OP_DIV        reduce using rule 2 (expressao -> expressao t_OP_SUB termo .)
+    $end            reduce using rule 2 (expressao -> expressao t_OP_SUB termo .)
+
+
+state 15
+
+    (8) termo -> t_PAR_OPEN expressao t_PAR_CLOSE .
+
+    t_PAR_CLOSE     reduce using rule 8 (termo -> t_PAR_OPEN expressao t_PAR_CLOSE .)
+    t_OP_ADD        reduce using rule 8 (termo -> t_PAR_OPEN expressao t_PAR_CLOSE .)
+    t_OP_SUB        reduce using rule 8 (termo -> t_PAR_OPEN expressao t_PAR_CLOSE .)
+    t_OP_MUL        reduce using rule 8 (termo -> t_PAR_OPEN expressao t_PAR_CLOSE .)
+    t_OP_DIV        reduce using rule 8 (termo -> t_PAR_OPEN expressao t_PAR_CLOSE .)
+    $end            reduce using rule 8 (termo -> t_PAR_OPEN expressao t_PAR_CLOSE .)
 

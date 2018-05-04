@@ -7,6 +7,7 @@ reload(sys)
 sys.setdefaultencoding('UTF-8')
 
 reserved = {
+    'fim'       : 'EOF',
     'se'        : 'KW_IF',
     'senao'     : 'KW_ELSE',
     'para'      : 'KW_FOR',
@@ -146,7 +147,7 @@ lexer = lex.lex()
 
 # testando////////////////////testanto//////////////////////testanto/////////////////////////
 
-arq = codecs.open('programação.txt', 'r', encoding='utf-8')
+arq = codecs.open('Teste.txt', 'r', encoding='utf-8')
 texto = arq.read().encode('utf-8')
 lexer.input(texto)
 

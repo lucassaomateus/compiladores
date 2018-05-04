@@ -1,0 +1,5 @@
+0 mais 1
+0 menos 1
+1 dividido_por 1
+
+fim
