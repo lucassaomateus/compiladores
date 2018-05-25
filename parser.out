@@ -1,0 +1,291 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    KW_FOR
+    PAR_CLOSE
+    OP_LOG_AND
+    ERRADO
+    KW_IF_OPEN
+    OP_ATRIB
+    t_KW_FUNC_ARGS_SEP
+    KW_FUNC_ARGS_SEP
+    t_OP_LOG_OR
+    t_KW_FUNCTION
+    OP_INC
+    t_OP_LOG_NOT
+    OP_MUL
+    KW_ELSE
+    OP_DEC
+    t_KW_FUNC_OPEN
+    OP_LOG_BT
+    OP_LOG_EQUAL
+    TRUE
+    OP_LOG_NOT
+    EOF
+    OP_EXP
+    KW_FUNCTION
+    t_KW_FPUNC
+    t_KW_FOR_OPEN
+    OP_LOG_BT_EKW_FUNC_OPEN
+    KW_IF_CLOSE
+    KW_PRINT
+    t_OP_LOG_AND
+    t_PAR_OPEN
+    OP_SUB
+    IDENTIFIER
+    KW_FUNC_OPEN_ARGS
+    STRING
+    KW_FPUNC
+    OP_LOG_OR
+    t_KW_FOR_CLOSE
+    KW_INPUT
+    KW_WHILE
+    KW_FOR_CLOSE
+    t_OP_LOG_DIFF
+    OP_LOG_DIFF
+    t_OP_EXP
+    OP_ADD
+    t_OP_LOG_LT
+    OP_DIV1
+    t_OP_LOG_LT_E
+    t_OP_LOG_EQUAL
+    KW_FUNC_CLOSE
+    FALSE
+    t_OP_LOG_BT_E
+    PAR_OPEN
+    t_OP_INC
+    t_KW_IF_OPEN
+    KW_FOR_OPEN
+    t_OP_DEC
+    OP_LOG_LT
+    t_OP_LOG_BT
+    OP_LOG_LT_E
+    t_KW_FUNC_OPEN_ARGS
+    KW_IF
+    t_PAR_CLOSE
+    KW_STRING
+
+Grammar
+
+Rule 0     S' -> expressao
+Rule 1     expressao -> declaracao ID atrib ID numero
+Rule 2     atrib -> t_OP_ATRIB
+Rule 3     atrib -> empty
+Rule 4     declaracao -> KW_INT
+Rule 5     declaracao -> KW_FLOAT
+Rule 6     numero -> INT_NUMBER
+Rule 7     numero -> FLOAT_NUMBER
+Rule 8     numero -> ID
+Rule 9     op -> t_OP_ADD
+Rule 10    op -> t_OP_SUB
+Rule 11    op -> t_OP_DIV
+Rule 12    op -> t_OP_MUL
+Rule 13    exp -> numero
+Rule 14    exp -> numero op exp
+Rule 15    exp -> empty
+Rule 16    empty -> <empty>
+
+Terminals, with rules where they appear
+
+EOF                  : 
+ERRADO               : 
+FALSE                : 
+FLOAT_NUMBER         : 7
+ID                   : 1 1 8
+IDENTIFIER           : 
+INT_NUMBER           : 6
+KW_ELSE              : 
+KW_FLOAT             : 5
+KW_FOR               : 
+KW_FOR_CLOSE         : 
+KW_FOR_OPEN          : 
+KW_FPUNC             : 
+KW_FUNCTION          : 
+KW_FUNC_ARGS_SEP     : 
+KW_FUNC_CLOSE        : 
+KW_FUNC_OPEN_ARGS    : 
+KW_IF                : 
+KW_IF_CLOSE          : 
+KW_IF_OPEN           : 
+KW_INPUT             : 
+KW_INT               : 4
+KW_PRINT             : 
+KW_STRING            : 
+KW_WHILE             : 
+OP_ADD               : 
+OP_ATRIB             : 
+OP_DEC               : 
+OP_DIV1              : 
+OP_EXP               : 
+OP_INC               : 
+OP_LOG_AND           : 
+OP_LOG_BT            : 
+OP_LOG_BT_EKW_FUNC_OPEN : 
+OP_LOG_DIFF          : 
+OP_LOG_EQUAL         : 
+OP_LOG_LT            : 
+OP_LOG_LT_E          : 
+OP_LOG_NOT           : 
+OP_LOG_OR            : 
+OP_MUL               : 
+OP_SUB               : 
+PAR_CLOSE            : 
+PAR_OPEN             : 
+STRING               : 
+TRUE                 : 
+error                : 
+t_KW_FOR_CLOSE       : 
+t_KW_FOR_OPEN        : 
+t_KW_FPUNC           : 
+t_KW_FUNCTION        : 
+t_KW_FUNC_ARGS_SEP   : 
+t_KW_FUNC_OPEN       : 
+t_KW_FUNC_OPEN_ARGS  : 
+t_KW_IF_OPEN         : 
+t_OP_ADD             : 9
+t_OP_ATRIB           : 2
+t_OP_DEC             : 
+t_OP_DIV             : 11
+t_OP_EXP             : 
+t_OP_INC             : 
+t_OP_LOG_AND         : 
+t_OP_LOG_BT          : 
+t_OP_LOG_BT_E        : 
+t_OP_LOG_DIFF        : 
+t_OP_LOG_EQUAL       : 
+t_OP_LOG_LT          : 
+t_OP_LOG_LT_E        : 
+t_OP_LOG_NOT         : 
+t_OP_LOG_OR          : 
+t_OP_MUL             : 12
+t_OP_SUB             : 10
+t_PAR_CLOSE          : 
+t_PAR_OPEN           : 
+
+Nonterminals, with rules where they appear
+
+atrib                : 1
+declaracao           : 1
+empty                : 3 15
+exp                  : 14
+expressao            : 0
+numero               : 1 13 14
+op                   : 14
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . expressao
+    (1) expressao -> . declaracao ID atrib ID numero
+    (4) declaracao -> . KW_INT
+    (5) declaracao -> . KW_FLOAT
+
+    KW_INT          shift and go to state 2
+    KW_FLOAT        shift and go to state 3
+
+    expressao                      shift and go to state 1
+    declaracao                     shift and go to state 4
+
+state 1
+
+    (0) S' -> expressao .
+
+
+
+state 2
+
+    (4) declaracao -> KW_INT .
+
+    ID              reduce using rule 4 (declaracao -> KW_INT .)
+
+
+state 3
+
+    (5) declaracao -> KW_FLOAT .
+
+    ID              reduce using rule 5 (declaracao -> KW_FLOAT .)
+
+
+state 4
+
+    (1) expressao -> declaracao . ID atrib ID numero
+
+    ID              shift and go to state 5
+
+
+state 5
+
+    (1) expressao -> declaracao ID . atrib ID numero
+    (2) atrib -> . t_OP_ATRIB
+    (3) atrib -> . empty
+    (16) empty -> .
+
+    t_OP_ATRIB      shift and go to state 7
+    ID              reduce using rule 16 (empty -> .)
+
+    atrib                          shift and go to state 6
+    empty                          shift and go to state 8
+
+state 6
+
+    (1) expressao -> declaracao ID atrib . ID numero
+
+    ID              shift and go to state 9
+
+
+state 7
+
+    (2) atrib -> t_OP_ATRIB .
+
+    ID              reduce using rule 2 (atrib -> t_OP_ATRIB .)
+
+
+state 8
+
+    (3) atrib -> empty .
+
+    ID              reduce using rule 3 (atrib -> empty .)
+
+
+state 9
+
+    (1) expressao -> declaracao ID atrib ID . numero
+    (6) numero -> . INT_NUMBER
+    (7) numero -> . FLOAT_NUMBER
+    (8) numero -> . ID
+
+    INT_NUMBER      shift and go to state 12
+    FLOAT_NUMBER    shift and go to state 11
+    ID              shift and go to state 13
+
+    numero                         shift and go to state 10
+
+state 10
+
+    (1) expressao -> declaracao ID atrib ID numero .
+
+    $end            reduce using rule 1 (expressao -> declaracao ID atrib ID numero .)
+
+
+state 11
+
+    (7) numero -> FLOAT_NUMBER .
+
+    $end            reduce using rule 7 (numero -> FLOAT_NUMBER .)
+
+
+state 12
+
+    (6) numero -> INT_NUMBER .
+
+    $end            reduce using rule 6 (numero -> INT_NUMBER .)
+
+
+state 13
+
+    (8) numero -> ID .
+
+    $end            reduce using rule 8 (numero -> ID .)
+

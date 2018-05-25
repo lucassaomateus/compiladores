@@ -30,7 +30,7 @@ reserved = {
     'ou'         : 't_OP_LOG_OR',
     'igual_a'    : 't_OP_LOG_EQUAL',
     'diferente'  : 't_OP_LOG_DIFF',
-    'naho'        : 't_OP_LOG_NOT',
+    'nao'        : 't_OP_LOG_NOT',
     'menor_que'  : 't_OP_LOG_LT',
     'menor_igual':'t_OP_LOG_LT_E',
     'maior_que'  : 't_OP_LOG_BT',

@@ -49,37 +49,47 @@ precedence = (
     ('left','t_OP_MUL','t_OP_DIV')
 )
 
-def p_soma(p):
-    'expressao  : expressao t_OP_ADD termo'
-    p[0] = p[1] + p[3]
+def p_operacoes_aritmeticas(p):
 
-def p_subtracao(p):
-    'expressao  : expressao t_OP_SUB termo'
-    p[0] = p[1] - p[3]
-
-def p_multiplicacao(p):
-    'expressao  : expressao t_OP_MUL termo'
-    p[0] = p[1] * p[3]
-
-def p_divisao(p):
-    'expressao  : expressao t_OP_DIV termo'
-    p[0] = p[1] / p[3]
-
-def p_atribuicao(p):
-    'expressao  : termo'
-    p[0] = p[1]
-
-def p_termo(p):
-    '''termo  : KW_FLOAT
-              | KW_INT
-              | t_PAR_OPEN expressao t_PAR_CLOSE
     '''
+    expressao : declaracao ID atrib ID numero
+
+    atrib : t_OP_ATRIB
+          | empty
+
+    declaracao : KW_INT
+               | KW_FLOAT
+
+    numero : INT_NUMBER
+           | FLOAT_NUMBER
+           | ID
+
+    op : t_OP_ADD
+       | t_OP_SUB
+       | t_OP_DIV
+       | t_OP_MUL
+
+    exp : numero
+        | numero op exp
+        | empty
+    '''
+
+    if p[2] == 't_OP_ADD':
+        p[0] = p[1] + p[3]
+    elif p[2] == 't_OP_SUB':
+        p[0] = p[1] - p[3]
+    elif p[2] == 't_OP_MUL':
+        p[0] = p[1] * p[3]
+    elif p[2] == 't_OP_DIV':
+        p[0] = p[1] / p[3]
+
+def p_empty(p):
+    'empty :'
+    pass
 
 def p_error(p):
     print("Syntax error in input!")
 
-#arvore = Node(p)
-#arvore._pretty()
 parser = yacc.yacc()
 
 with open("Teste.txt", "r") as arquivo:
