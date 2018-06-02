@@ -1,0 +1,14 @@
+int lucas;
+
+se lucas maior_que 10 entao int ver deu
+
+lucas maior_que 10;
+30 menor_que 100;
+
+lucas eh 10;
+
+
+
+
+ 
+
