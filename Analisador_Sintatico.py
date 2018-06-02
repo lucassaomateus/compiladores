@@ -267,7 +267,7 @@ def p_ler(p):
 def p_for(p):
 
     '''
-    declaracao_for : KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE
+    declaracao_for : KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE KW_END_LINE
     '''
 
     p[0] = Node('for', children = [p[2],p[4],p[6]], leaf = 'for', line = p.lineno(2))

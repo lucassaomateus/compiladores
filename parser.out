@@ -69,7 +69,7 @@ Rule 51    declaracao_if -> KW_IF expressao_booleana KW_IF_OPEN lista_declaracoe
 Rule 52    declaracao_if -> KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_ELSE declaracao_if
 Rule 53    declaracao_print -> KW_PRINT parametros KW_END_LINE
 Rule 54    declaracao_ler -> KW_INPUT ID
-Rule 55    declaracao_for -> KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE
+Rule 55    declaracao_for -> KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE KW_END_LINE
 Rule 56    declaracao_while -> KW_WHILE expressao_booleana FACA lista_declaracoes KW_CLOSE
 Rule 57    declaracao_funcao -> KW_FUNCTION ID KW_FUNC_OPEN lista_declaracoes KW_CLOSE
 Rule 58    declaracao_funcao -> KW_FUNCTION ID KW_FUNC_OPEN_ARGS argumentos KW_FUNC_OPEN lista_declaracoes KW_CLOSE KW_END_LINE
@@ -91,7 +91,7 @@ INT_NUMBER           :
 KW_BOOLEAN           : 48
 KW_CLOSE             : 51 55 56 57 58
 KW_ELSE              : 52
-KW_END_LINE          : 4 5 6 7 9 10 11 12 13 14 15 53 58
+KW_END_LINE          : 4 5 6 7 9 10 11 12 13 14 15 53 55 58
 KW_FLOAT             : 24 49
 KW_FOR_CLOSE         : 
 KW_FOR_OPEN          : 55
@@ -189,7 +189,7 @@ state 0
     (59) expressao -> . ID KW_FUNC_OPEN_ARGS parametros
     (51) declaracao_if -> . KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_CLOSE
     (52) declaracao_if -> . KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_ELSE declaracao_if
-    (55) declaracao_for -> . KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE
+    (55) declaracao_for -> . KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE KW_END_LINE
     (56) declaracao_while -> . KW_WHILE expressao_booleana FACA lista_declaracoes KW_CLOSE
     (53) declaracao_print -> . KW_PRINT parametros KW_END_LINE
     (54) declaracao_ler -> . KW_INPUT ID
@@ -291,7 +291,7 @@ state 3
     (59) expressao -> . ID KW_FUNC_OPEN_ARGS parametros
     (51) declaracao_if -> . KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_CLOSE
     (52) declaracao_if -> . KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_ELSE declaracao_if
-    (55) declaracao_for -> . KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE
+    (55) declaracao_for -> . KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE KW_END_LINE
     (56) declaracao_while -> . KW_WHILE expressao_booleana FACA lista_declaracoes KW_CLOSE
     (53) declaracao_print -> . KW_PRINT parametros KW_END_LINE
     (54) declaracao_ler -> . KW_INPUT ID
@@ -651,7 +651,7 @@ state 22
 
 state 23
 
-    (55) declaracao_for -> KW_FOR_OPEN . ID EM expressao FACA lista_declaracoes KW_CLOSE
+    (55) declaracao_for -> KW_FOR_OPEN . ID EM expressao FACA lista_declaracoes KW_CLOSE KW_END_LINE
 
     ID              shift and go to state 67
 
@@ -1780,7 +1780,7 @@ state 66
 
 state 67
 
-    (55) declaracao_for -> KW_FOR_OPEN ID . EM expressao FACA lista_declaracoes KW_CLOSE
+    (55) declaracao_for -> KW_FOR_OPEN ID . EM expressao FACA lista_declaracoes KW_CLOSE KW_END_LINE
 
     EM              shift and go to state 92
 
@@ -2560,7 +2560,7 @@ state 91
     (59) expressao -> . ID KW_FUNC_OPEN_ARGS parametros
     (51) declaracao_if -> . KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_CLOSE
     (52) declaracao_if -> . KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_ELSE declaracao_if
-    (55) declaracao_for -> . KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE
+    (55) declaracao_for -> . KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE KW_END_LINE
     (56) declaracao_while -> . KW_WHILE expressao_booleana FACA lista_declaracoes KW_CLOSE
     (53) declaracao_print -> . KW_PRINT parametros KW_END_LINE
     (54) declaracao_ler -> . KW_INPUT ID
@@ -2615,7 +2615,7 @@ state 91
 
 state 92
 
-    (55) declaracao_for -> KW_FOR_OPEN ID EM . expressao FACA lista_declaracoes KW_CLOSE
+    (55) declaracao_for -> KW_FOR_OPEN ID EM . expressao FACA lista_declaracoes KW_CLOSE KW_END_LINE
     (16) expressao -> . expressao OP_ADD expressao
     (17) expressao -> . expressao OP_SUB expressao
     (18) expressao -> . expressao OP_MUL expressao
@@ -2681,7 +2681,7 @@ state 93
     (59) expressao -> . ID KW_FUNC_OPEN_ARGS parametros
     (51) declaracao_if -> . KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_CLOSE
     (52) declaracao_if -> . KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_ELSE declaracao_if
-    (55) declaracao_for -> . KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE
+    (55) declaracao_for -> . KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE KW_END_LINE
     (56) declaracao_while -> . KW_WHILE expressao_booleana FACA lista_declaracoes KW_CLOSE
     (53) declaracao_print -> . KW_PRINT parametros KW_END_LINE
     (54) declaracao_ler -> . KW_INPUT ID
@@ -2840,7 +2840,7 @@ state 97
     (59) expressao -> . ID KW_FUNC_OPEN_ARGS parametros
     (51) declaracao_if -> . KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_CLOSE
     (52) declaracao_if -> . KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_ELSE declaracao_if
-    (55) declaracao_for -> . KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE
+    (55) declaracao_for -> . KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE KW_END_LINE
     (56) declaracao_while -> . KW_WHILE expressao_booleana FACA lista_declaracoes KW_CLOSE
     (53) declaracao_print -> . KW_PRINT parametros KW_END_LINE
     (54) declaracao_ler -> . KW_INPUT ID
@@ -2922,7 +2922,7 @@ state 99
 
 state 100
 
-    (55) declaracao_for -> KW_FOR_OPEN ID EM expressao . FACA lista_declaracoes KW_CLOSE
+    (55) declaracao_for -> KW_FOR_OPEN ID EM expressao . FACA lista_declaracoes KW_CLOSE KW_END_LINE
     (16) expressao -> expressao . OP_ADD expressao
     (17) expressao -> expressao . OP_SUB expressao
     (18) expressao -> expressao . OP_MUL expressao
@@ -3061,7 +3061,7 @@ state 112
 
 state 113
 
-    (55) declaracao_for -> KW_FOR_OPEN ID EM expressao FACA . lista_declaracoes KW_CLOSE
+    (55) declaracao_for -> KW_FOR_OPEN ID EM expressao FACA . lista_declaracoes KW_CLOSE KW_END_LINE
     (2) lista_declaracoes -> . declaracao lista_declaracoes
     (3) lista_declaracoes -> . declaracao
     (4) declaracao -> . expressao KW_END_LINE
@@ -3092,7 +3092,7 @@ state 113
     (59) expressao -> . ID KW_FUNC_OPEN_ARGS parametros
     (51) declaracao_if -> . KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_CLOSE
     (52) declaracao_if -> . KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_ELSE declaracao_if
-    (55) declaracao_for -> . KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE
+    (55) declaracao_for -> . KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE KW_END_LINE
     (56) declaracao_while -> . KW_WHILE expressao_booleana FACA lista_declaracoes KW_CLOSE
     (53) declaracao_print -> . KW_PRINT parametros KW_END_LINE
     (54) declaracao_ler -> . KW_INPUT ID
@@ -3202,7 +3202,7 @@ state 117
     (59) expressao -> . ID KW_FUNC_OPEN_ARGS parametros
     (51) declaracao_if -> . KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_CLOSE
     (52) declaracao_if -> . KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_ELSE declaracao_if
-    (55) declaracao_for -> . KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE
+    (55) declaracao_for -> . KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE KW_END_LINE
     (56) declaracao_while -> . KW_WHILE expressao_booleana FACA lista_declaracoes KW_CLOSE
     (53) declaracao_print -> . KW_PRINT parametros KW_END_LINE
     (54) declaracao_ler -> . KW_INPUT ID
@@ -3290,7 +3290,7 @@ state 120
 
 state 121
 
-    (55) declaracao_for -> KW_FOR_OPEN ID EM expressao FACA lista_declaracoes . KW_CLOSE
+    (55) declaracao_for -> KW_FOR_OPEN ID EM expressao FACA lista_declaracoes . KW_CLOSE KW_END_LINE
 
     KW_CLOSE        shift and go to state 125
 
@@ -3323,19 +3323,26 @@ state 124
 
 state 125
 
-    (55) declaracao_for -> KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE .
+    (55) declaracao_for -> KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE . KW_END_LINE
 
-    KW_END_LINE     reduce using rule 55 (declaracao_for -> KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE .)
+    KW_END_LINE     shift and go to state 127
 
 
 state 126
 
     (58) declaracao_funcao -> KW_FUNCTION ID KW_FUNC_OPEN_ARGS argumentos KW_FUNC_OPEN lista_declaracoes KW_CLOSE . KW_END_LINE
 
-    KW_END_LINE     shift and go to state 127
+    KW_END_LINE     shift and go to state 128
 
 
 state 127
+
+    (55) declaracao_for -> KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE KW_END_LINE .
+
+    KW_END_LINE     reduce using rule 55 (declaracao_for -> KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE KW_END_LINE .)
+
+
+state 128
 
     (58) declaracao_funcao -> KW_FUNCTION ID KW_FUNC_OPEN_ARGS argumentos KW_FUNC_OPEN lista_declaracoes KW_CLOSE KW_END_LINE .
 
