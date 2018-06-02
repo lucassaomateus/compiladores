@@ -1,7 +1,4 @@
-texto msg1 é "No one expects the spanish inquisition!";
-texto msg2 é "Our chief weapon is surprise";
+texto msg1 eh "No one expects the spanish inquisition";
+texto msg2 eh "Our chief weapon is surprise";
 
-int x;
-
-x é msg2 dividido por msg1;
-mostra x;
+mostra msg1, msg2;
