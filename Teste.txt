@@ -1,31 +1,31 @@
 
-int n1 eh 10, n2 eh 85, n3 eh 0, n4 eh 32
-real n5 eh 10,5
-texto t1, t2, t3
+int n1 eh 10, n2 eh 85, n3 eh 0, n4 eh 32;
+real n5 eh 10,5;
+texto t1, t2, t3;
 
-define func1 com int x, int y como
-   retorna x vezes y dividido por x mais y
-e deu
+define func1 com int x, int y como;
+   retorna x vezes y dividido por x mais y;
+e deu;
 
-n3 eh func1 com n1, n4
+n3 eh func1 com n1, n4;
 
-mostra n5
+mostra n5;
 
-lista l1, l2
+lista l1, l2;
 
-int x eh 0
+int x eh 0;
 
-para item em l1 faca
-   x eh x mais 1
-   mostra x
-e deu
+para item em l1 faca;
+   x eh x mais 1;
+   mostra x;
+e deu;
 
-mostra func1 com n2, n3
+mostra func1 com n2, n3;
 
-leia n2
+leia n2;
 
-se n2 eh maior ou igual a 10 entao
-   n2 eh n2 dividido por 2
-   mostra n2
-e deu
-fim
+se n2 eh maior ou igual a 10 entao;
+   n2 eh n2 dividido por 2;
+   mostra n2;
+e deu;
+fim;

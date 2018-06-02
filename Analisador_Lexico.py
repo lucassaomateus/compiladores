@@ -11,6 +11,7 @@ reserved = {
     'em'                    : 'EM',
     'retorna'               : 'KW_RETURN',
     'int'                   : 'KW_INT',
+    'bool'                  : 'KW_BOOLEAN',
     'real'                  : 'KW_FLOAT',
     'texto'                 : 'KW_STRING',
     'mostra'                : 'KW_PRINT',
@@ -44,6 +45,7 @@ reserved = {
 }
 
 tokens = [
+    'KW_END_LINE',
     'VIRGULA',
     'OP_LOG_AND',
     'INT_NUMBER',
@@ -54,6 +56,7 @@ tokens = [
 ]+ (list(reserved.values()))
 
 digit = [0-9]
+t_KW_END_LINE = r';'
 t_VIRGULA = r','
 t_OP_LOG_AND = r'e'
 t_ignore  = ' \t|\n';   #pula linhas e espaços do codigo fonte

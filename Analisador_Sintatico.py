@@ -69,13 +69,12 @@ def p_declaracao(p):    #Transforma as declarações nos tipos de funções da n
                         #Exemplo: for, if, while
     '''
     declaracao : expressao KW_END_LINE
-               | declaracao KW_END_LINE
                | declaracao_if KW_END_LINE
                | declaracao_for KW_END_LINE
                | declaracao_while KW_END_LINE
                | declaracao_print
-               | declaracao_scan KW_END_LINE
-               | declaracao_variavel KW_END_LINE
+               | declaracao_ler KW_END_LINE
+               | declaracao KW_END_LINE
                | declaracao_variavel_sem_valores KW_END_LINE
                | atribuicao KW_END_LINE
                | expressao_booleana KW_END_LINE
@@ -148,11 +147,20 @@ def p_expressao_booleana(p):
     elif p.slice[2].type == 'OP_LOG_LT':
         p[0] = Node('exp_boolean', children = [p[1],p[3]], leaf = 'menor que', line = p.lineno(1))
 
+def p_boolean(p):
+
+    '''
+    boolean : TRUE
+            | FALSE
+    '''
+
+    p[0] = p[1]
+
 def p_atribuicao(p):
 
     '''
     atribuicao : ID OP_ATRIB expressao
-               | atribuicao KW_FUNC_ARGS_SEP atribuicao
+               | atribuicao VIRGULA atribuicao
     '''
 
     if p.slice[1].type == 'ID':
@@ -163,7 +171,7 @@ def p_atribuicao(p):
 def p_lista_variaveis(p):
 
     '''
-    lista_variaveis : ID KW_FUNC_ARGS_SEP lista_variaveis
+    lista_variaveis : ID VIRGULA lista_variaveis
                     | ID
     '''
 
@@ -172,10 +180,10 @@ def p_lista_variaveis(p):
     else:
         p[0] = Node('lista_variaveis', children = p[1], leaf = 'id', line = p.lineno(1))
 
-def p_declaracao_variavel_sem_valores(p):
+def p_declaracao_sem_valores(p):
 
     '''
-    declaracao_variavel_sem_valores : tipo ID KW_FUNC_ARGS_SEP lista_variaveis
+    declaracao_variavel_sem_valores : tipo ID VIRGULA lista_variaveis
                                     | tipo ID
     '''
 
@@ -184,10 +192,10 @@ def p_declaracao_variavel_sem_valores(p):
     else:
         p[0] = Node('declaracao_sem_valor', children = p[2], leaf = p[1], line = p.lineno(2))
 
-def p_declaracao(p):
+def p_criacao_variavel(p):
 
     '''
-    declaracao : tipo ID OP_ATRIB expression KW_FUNC_ARGS_SEP assignment
+    criacao_variavel : tipo ID OP_ATRIB expressao VIRGULA atribuicao
                | tipo ID OP_ATRIB expressao
     '''
 
@@ -207,7 +215,7 @@ def p_par(p):
 def p_argumentos(p):
 
     '''
-    argumentos : argumentos KW_FUNC_ARGS_SEP argumentos
+    argumentos : argumentos VIRGULA argumentos
                | tipo ID
     '''
 
@@ -220,8 +228,10 @@ def p_tipos(p):
 
     '''
     tipo : KW_INT
+         | KW_BOOLEAN
          | KW_FLOAT
          | KW_STRING
+
     '''
 
     p[0] = p[1]
@@ -229,7 +239,7 @@ def p_tipos(p):
 def p_if(p):
 
     '''
-    declaracao_if : KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_IF_CLOSE
+    declaracao_if : KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_CLOSE
                   | KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_ELSE declaracao_if
     '''
 
@@ -257,7 +267,7 @@ def p_ler(p):
 def p_for(p):
 
     '''
-    declaracao_for : KW_FOR ID EM expressao FACA lista_declaracoes KW_CLOSE
+    declaracao_for : KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE
     '''
 
     p[0] = Node('for', children = [p[2],p[4],p[6]], leaf = 'for', line = p.lineno(2))
@@ -281,7 +291,7 @@ def p_funcao(p):
 def p_funcao_argumentos(p):
 
     '''
-    declaracao : KW_FUNCTION ID KW_FUNC_OPEN_ARGS argumentos KW_FUNC_OPEN lista_declaracoes KW_CLOSE KW_END_LINE
+    declaracao_funcao : KW_FUNCTION ID KW_FUNC_OPEN_ARGS argumentos KW_FUNC_OPEN lista_declaracoes KW_CLOSE KW_END_LINE
     '''
 
     p[0] = Node('declaracao_funcao', children = [p[4],p[6]], leaf = p[2], line = p.lineno(1))
@@ -306,7 +316,7 @@ def p_parametros(p):
 
     '''
     parametros : expressao
-               | parametros KW_FUNC_ARGS_SEP parametros
+               | parametros VIRGULA parametros
     '''
 
     if len(p) == 2:
