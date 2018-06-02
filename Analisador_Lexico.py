@@ -1,19 +1,15 @@
-# encoding=UTF-8
-import codecs
-from ply import lex
-import re
 import sys
-reload(sys)
-sys.setdefaultencoding('UTF-8')
+from ply import lex
 
 reserved = {
     'fim'                   : 'EOF',
     'se'                    : 'KW_IF',
     'senao'                 : 'KW_ELSE',
-    'para'                  : 'KW_FOR',
+    'para'                  : 'KW_FOR_OPEN',
     'enquanto'              : 'KW_WHILE',
-    'faca'                  : 'FACA'
-    'em'                    : 'EM'
+    'faca'                  : 'FACA',
+    'em'                    : 'EM',
+    'retorna'               : 'KW_RETURN',
     'int'                   : 'KW_INT',
     'real'                  : 'KW_FLOAT',
     'texto'                 : 'KW_STRING',
@@ -28,7 +24,6 @@ reserved = {
     'maismais'              : 'OP_INC',
     'decrementa'            : 'OP_DEC',
     'na'                    : 'OP_EXP',
-    'e'                     : 'OP_LOG_AND',
     'ou'                    : 'OP_LOG_OR',
     'igual_a'               : 'OP_LOG_EQUAL',
     'diferente'             : 'OP_LOG_DIFF',
@@ -38,7 +33,6 @@ reserved = {
     'maior_que'             : 'OP_LOG_BT',
     'maior_igual'           : 'OP_LOG_BT_E',
     'como'                  : 'KW_FUNC_OPEN',
-    'deu'                   : 'KW_FUNC_CLOSE',
     'entao'                 : 'KW_IF_OPEN',
     'deu'                   : 'KW_CLOSE',
     'fecha'                 : 'KW_FOR_CLOSE',
@@ -47,81 +41,42 @@ reserved = {
     'eh'                    : 'OP_ATRIB',
     'agora_argumentos'      : 'PAR_OPEN',
     'deu_de_argumentos'     : 'PAR_CLOSE',
-    ','                     : 'KW_FUNC_ARGS_SEP',
-    ';'                     : 'KW_END_LINE'
 }
 
 tokens = [
-    'OP_ADD',
-    'OP_SUB',
-    'OP_MUL',
-    'OP_DIV',
-    'OP_INC',
-    'OP_DEC',
-    'OP_EXP',
-    'PAR_OPEN',
-    'PAR_CLOSE',
-    'OP_ATRIB',
-    'IDENTIFIER',
+    'VIRGULA',
+    'OP_LOG_AND',
     'INT_NUMBER',
     'FLOAT_NUMBER',
     'STRING',
-    'OP_LOG_AND',
-    'OP_LOG_OR',
-    'OP_LOG_EQUAL',
-    'OP_LOG_DIFF',
-    'OP_LOG_NOT',
-    'OP_LOG_LT',
-    'OP_LOG_LT_E',
-    'OP_LOG_BT',
-    'OP_LOG_BT_E'
-    'KW_FUNC_OPEN',
-    'KW_FUNC_CLOSE',
-    'KW_IF_OPEN',
-    'KW_IF_CLOSE',
-    'KW_FOR_OPEN',
-    'KW_FOR_CLOSE',
-    'KW_FUNCTION',
-    'KW_FUNC_OPEN_ARGS',
-    'KW_FUNC_ARGS_SEP',
-    'KW_FPUNC',
-    'ERRADO',
+    'ERROR',
     'ID',
 ]+ (list(reserved.values()))
 
 digit = [0-9]
-
+t_VIRGULA = r','
+t_OP_LOG_AND = r'e'
 t_ignore  = ' \t|\n';   #pula linhas e espaços do codigo fonte
 
-#tokens de numero float,
+#tokens de tipo float
 def t_FLOAT_NUMBER(t):
 
-    r'[0-9]+[\.][0-9]+|[0-9]+[\.][0-9]*' # essa função capta 1.
-    #t.type = reserved.get(t.value,'FLOAT_NUMBER')
+    r'[0-9]+[\.][0-9]+|[0-9]+[\.][0-9]*'
     t.value = float (t.value)
     return t
 
-#nessa função variaveis que comecem com numeral estão descatadas
-#Esse erro será tratado na analise sintatica
-def t_ERRADO(t):
-
-    r'[0-9]+[a-zA-Z_]+'
-    print ('Caractere ilegal : {} '.format(t.value))
-    t.lexer.skip(1)
-
-#nessa função temos os tokens numeral, inteiro
-def t_INT_NUMBER(t): # \d quer dizer que pode ser qual quer digito
+#tokens de tipo int
+def t_INT_NUMBER(t):
 
     r'[0-9]+'
-    #t.type = reserved.get(t.value,'INT_NUMBER')
-    t.value = int (t.value) # convertendo o valor em inteiro
+    t.value = int (t.value)
     return t
 
-#tokens identificador, variavel
+#tokens de variáveis
 def t_ID (t):
 
-    r'[a-zA-Z_][a-zA-Z_0-9]+'
-    t.type = reserved.get(t.value,'ID')    # Check for reserved words
+    r'[a-zA-Z_]+[a-zA-Z_0-9]*'
+    t.type = reserved.get(t.value,'ID')
     return t
 
 #nessa função, é necessário ter "" para que venha se considerada string
@@ -149,13 +104,10 @@ def t_COMMENT(t):
 
 lexer = lex.lex()
 
-arq = codecs.open('Teste.txt', 'r', encoding='utf-8')
-texto = arq.read().encode('utf-8')
-lexer.input(texto)
+codigo = open(sys.argv[1]).read()
+lexer.input(codigo)
 
-while True :
+token = lexer.token()
+while token:
+    print(token)
     token = lexer.token()
-    if not token:
-        break
-    print (token)
-arq.close()
