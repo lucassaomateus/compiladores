@@ -7,57 +7,55 @@ reload(sys)
 sys.setdefaultencoding('UTF-8')
 
 reserved = {
-    'fim'       : 'EOF',
-    'se'        : 'KW_IF',
-    'senao'     : 'KW_ELSE',
-    'para'      : 'KW_FOR',
-    'enquanto'  : 'KW_WHILE',
-    'int'       : 'KW_INT',
-    'real'      : 'KW_FLOAT',
-    'texto'     : 'KW_STRING',
-    'mostra'    : 'KW_PRINT',
-    'leia'      : 'KW_INPUT',
-    'verdadeiro': 'TRUE',
-    'falso'     : 'FALSE',
-    'mais'      : 't_OP_ADD',
-    'menos'     : 't_OP_SUB',
-    'vezes'     : 't_OP_MUL',
-    'dividido_por'  : 't_OP_DIV',
-    'maismais'   : 't_OP_INC',
-    'decrementa' : 't_OP_DEC',
-    'na'         : 't_OP_EXP',
-    'e'          : 't_OP_LOG_AND',
-    'ou'         : 't_OP_LOG_OR',
-    'igual_a'    : 't_OP_LOG_EQUAL',
-    'diferente'  : 't_OP_LOG_DIFF',
-    'nao'        : 't_OP_LOG_NOT',
-    'menor_que'  : 't_OP_LOG_LT',
-    'menor_igual':'t_OP_LOG_LT_E',
-    'maior_que'  : 't_OP_LOG_BT',
-    'maior_igual': 't_OP_LOG_BT_E',
-    'como'       : 't_KW_FUNC_OPEN',
-    'deu'        : 't_KW_FUNC_CLOSE',
-    'entao'      : 't_KW_IF_OPEN',
-    'deu'        : 't_KW_IF_CLOSE',
-    'facha'      : 't_KW_FOR_OPEN',
-    'deu'       : 't_KW_FOR_CLOSE',
-    'define'    : 't_KW_FUNCTION',
-    'com'       : 't_KW_FUNC_OPEN_ARGS',
-     'eh'        : 't_OP_ATRIB',
-     'agora_argumentos' : 't_PAR_OPEN',
-     'deu_de_argumentos': 't_PAR_CLOSE',
-     ','        : 't_KW_FUNC_ARGS_SEP',
-     '.'        : 't_KW_FPUNC',
-
+    'fim'                   : 'EOF',
+    'se'                    : 'KW_IF',
+    'senao'                 : 'KW_ELSE',
+    'para'                  : 'KW_FOR',
+    'enquanto'              : 'KW_WHILE',
+    'faca'                  : 'FACA'
+    'em'                    : 'EM'
+    'int'                   : 'KW_INT',
+    'real'                  : 'KW_FLOAT',
+    'texto'                 : 'KW_STRING',
+    'mostra'                : 'KW_PRINT',
+    'leia'                  : 'KW_INPUT',
+    'verdadeiro'            : 'TRUE',
+    'falso'                 : 'FALSE',
+    'mais'                  : 'OP_ADD',
+    'menos'                 : 'OP_SUB',
+    'vezes'                 : 'OP_MUL',
+    'dividido_por'          : 'OP_DIV',
+    'maismais'              : 'OP_INC',
+    'decrementa'            : 'OP_DEC',
+    'na'                    : 'OP_EXP',
+    'e'                     : 'OP_LOG_AND',
+    'ou'                    : 'OP_LOG_OR',
+    'igual_a'               : 'OP_LOG_EQUAL',
+    'diferente'             : 'OP_LOG_DIFF',
+    'nao'                   : 'OP_LOG_NOT',
+    'menor_que'             : 'OP_LOG_LT',
+    'menor_igual'           : 'OP_LOG_LT_E',
+    'maior_que'             : 'OP_LOG_BT',
+    'maior_igual'           : 'OP_LOG_BT_E',
+    'como'                  : 'KW_FUNC_OPEN',
+    'deu'                   : 'KW_FUNC_CLOSE',
+    'entao'                 : 'KW_IF_OPEN',
+    'deu'                   : 'KW_CLOSE',
+    'fecha'                 : 'KW_FOR_CLOSE',
+    'define'                : 'KW_FUNCTION',
+    'com'                   : 'KW_FUNC_OPEN_ARGS',
+    'eh'                    : 'OP_ATRIB',
+    'agora_argumentos'      : 'PAR_OPEN',
+    'deu_de_argumentos'     : 'PAR_CLOSE',
+    ','                     : 'KW_FUNC_ARGS_SEP',
+    ';'                     : 'KW_END_LINE'
 }
-
-
 
 tokens = [
     'OP_ADD',
     'OP_SUB',
     'OP_MUL',
-    'OP_DIV1',
+    'OP_DIV',
     'OP_INC',
     'OP_DEC',
     'OP_EXP',
@@ -91,14 +89,13 @@ tokens = [
     'ID',
 ]+ (list(reserved.values()))
 
-
 digit = [0-9]
 
-
-t_ignore  = ' \t|\n'; #pula linhas e espaços do codigo fonte
+t_ignore  = ' \t|\n';   #pula linhas e espaços do codigo fonte
 
 #tokens de numero float,
-def t_FLOAT_NUMBER(t) :
+def t_FLOAT_NUMBER(t):
+
     r'[0-9]+[\.][0-9]+|[0-9]+[\.][0-9]*' # essa função capta 1.
     #t.type = reserved.get(t.value,'FLOAT_NUMBER')
     t.value = float (t.value)
@@ -107,12 +104,14 @@ def t_FLOAT_NUMBER(t) :
 #nessa função variaveis que comecem com numeral estão descatadas
 #Esse erro será tratado na analise sintatica
 def t_ERRADO(t):
+
     r'[0-9]+[a-zA-Z_]+'
     print ('Caractere ilegal : {} '.format(t.value))
     t.lexer.skip(1)
 
 #nessa função temos os tokens numeral, inteiro
-def t_INT_NUMBER(t) : # \d quer dizer que pode ser qual quer digito
+def t_INT_NUMBER(t): # \d quer dizer que pode ser qual quer digito
+
     r'[0-9]+'
     #t.type = reserved.get(t.value,'INT_NUMBER')
     t.value = int (t.value) # convertendo o valor em inteiro
@@ -120,6 +119,7 @@ def t_INT_NUMBER(t) : # \d quer dizer que pode ser qual quer digito
 
 #tokens identificador, variavel
 def t_ID (t):
+
     r'[a-zA-Z_][a-zA-Z_0-9]+'
     t.type = reserved.get(t.value,'ID')    # Check for reserved words
     return t
@@ -127,25 +127,27 @@ def t_ID (t):
 #nessa função, é necessário ter "" para que venha se considerada string
 #além disso, somente nessa função o space não é desprezado
 def t_STRING (t):
+
     r'\"[a-zA-Z_][a-zA-Z_0-9| \t]*\"'
     t.type = str ('STRING')
     return t
 
 def t_newline(t):
+
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-def t_error(t) :
+def t_error(t):
+
     print ('Caractere ilegal : {} '.format(t.value[0]))
     t.lexer.skip(1)
 
 def t_COMMENT(t):
+
     r' \#.*'
     pass
 
 lexer = lex.lex()
-
-# testando////////////////////testanto//////////////////////testanto/////////////////////////
 
 arq = codecs.open('Teste.txt', 'r', encoding='utf-8')
 texto = arq.read().encode('utf-8')

@@ -1,19 +1,11 @@
-import ply.yacc as yacc
+from ply import yacc
 from Analisador_Lexico import tokens
-
-class BinOp:
-    def __init__(self, op, left, right):
-        self.type = 'bin_op'
-        self.left = left
-        self.right = right
-        self.op = op
-
-    def __str__(self):
-        return '({} {} {})'.format(self.left, self.op, self.right)
+import sys
 
 class Node:
-    def __init__(self, type, children=None, leaf=None):
+    def __init__(self, type, children=None, leaf=None, line=None):
         self.type = type
+        self.line = line
         if children:
             if not isinstance(children, (list, tuple)):
                 children = [children]
@@ -24,9 +16,9 @@ class Node:
 
     def _pretty(self, prefix='| '):
         string = []
-        if self.leaf:
+        root = '{}'.format(str(self.type))
+        if self.leaf is not None:
             root += ' ({})'.format(self.leaf)
-            root = '{}'.format(str(self.type))
         string.append(root)
         for child in self.children:
             if isinstance(child, Node):
@@ -45,55 +37,289 @@ class Node:
         return '({} {}[{}])'.format(self.type, leaf_string, children_string)
 
 precedence = (
-    ('left','t_OP_ADD','t_OP_SUB'),
-    ('left','t_OP_MUL','t_OP_DIV')
+    ('left', 'OP_ATRIB'),
+    ('left', 'OP_LOG_BT', 'OP_LOG_LT', 'OP_LOG_BT_E', 'OP_LOG_LT_E', 'OP_LOG_DIFF'),
+    ('left', 'OP_ADD', 'OP_SUB'),
+    ('left','OP_MUL','OP_DIV'),
+    ('left','PAR_OPEN', 'PAR_CLOSE'),
+    ('left','OP_EXP')
 )
 
-def p_operacoes_aritmeticas(p):
-
+def p_programa(p):      #Ponto inicial da derivação do codigo
+                        #Deriva em uma lista de declarações
     '''
-    expressao : declaracao ID atrib ID numero
-
-    atrib : t_OP_ATRIB
-          | empty
-
-    declaracao : KW_INT
-               | KW_FLOAT
-
-    numero : INT_NUMBER
-           | FLOAT_NUMBER
-           | ID
-
-    op : t_OP_ADD
-       | t_OP_SUB
-       | t_OP_DIV
-       | t_OP_MUL
-
-    exp : numero
-        | numero op exp
-        | empty
+        programa : lista_declaracoes
     '''
 
-    if p[2] == 't_OP_ADD':
-        p[0] = p[1] + p[3]
-    elif p[2] == 't_OP_SUB':
-        p[0] = p[1] - p[3]
-    elif p[2] == 't_OP_MUL':
-        p[0] = p[1] * p[3]
-    elif p[2] == 't_OP_DIV':
-        p[0] = p[1] / p[3]
+    p[0] = Node('programa', children = p[1], leaf = '')
 
-def p_empty(p):
-    'empty :'
-    pass
+def p_lista(p):     #Pega a lista de declarações, e vai abrindo em uma ou mais declarações
 
+    '''
+    lista_declaracoes : declaracao lista_declaracoes
+                      | declaracao
+    '''
+
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = Node('lista_declaracoes', children = [p[1],p[2]], leaf = ' ')
+
+def p_declaracao(p):    #Transforma as declarações nos tipos de funções da nossa linguagem
+                        #Exemplo: for, if, while
+    '''
+    declaracao : expressao KW_END_LINE
+               | declaracao KW_END_LINE
+               | declaracao_if KW_END_LINE
+               | declaracao_for KW_END_LINE
+               | declaracao_while KW_END_LINE
+               | declaracao_print
+               | declaracao_scan KW_END_LINE
+               | declaracao_variavel KW_END_LINE
+               | declaracao_variavel_sem_valores KW_END_LINE
+               | atribuicao KW_END_LINE
+               | expressao_booleana KW_END_LINE
+               | declaracao_funcao KW_END_LINE
+               | retorna KW_END_LINE
+    '''
+
+    p[0] = p[1]
+
+def p_operacoes_binarias(p):
+
+    '''
+    expressao : expressao OP_ADD expressao
+              | expressao OP_SUB expressao
+              | expressao OP_MUL expressao
+              | expressao OP_DIV expressao
+              | expressao OP_EXP expressao
+              | OP_INC ID
+              | OP_DEC ID
+              | KW_INT
+              | KW_FLOAT
+              | KW_STRING
+              | expressao_booleana
+              | ID
+    '''
+
+    if p.slice[1].type == 'ID':
+        p[0] = Node('valor', children = p[1], leaf = 'id', line = p.lineno(1))
+    elif p.slice[1].type == 'expressao_booleana':
+        p[0] = Node('value', children = p[1], leaf = 'exp_bool', line = p.lineno(1))
+    elif p.slice[1].type == 'KW_INT':
+        p[0] = Node('valor', children = p[1], leaf = 'int', line = p.lineno(1))
+    elif p.slice[1].type == 'KW_FLOAT':
+        p[0] = Node('valor', children = p[1], leaf = 'float', line = p.lineno(1))
+    elif p.slice[1].type == 'KW_STRING':
+        p[0] = Node('valor', children = p[1], leaf = 'string', line = p.lineno(1))
+    elif p.slice[1].type == 'OP_INC':
+        p[0] = Node('valor', children = p[2], leaf = '++', line = p.lineno(2))
+    elif p.slice[1].type == 'OP_DEC':
+        p[0] = Node('valor', children = p[2], leaf = '--', line = p.lineno(2))
+    elif p.slice[1].type == 'expressao':
+        p[0] = Node('operacao_binaria', children = [p[1], p[3]], leaf = p[2], line = p.lineno(2))
+
+def p_expressao_booleana(p):
+
+    #menor_que = OP_LOG_LT
+    #menor_igual = OP_LOG_LT_E
+    #maior_que = OP_LOG_BT
+    #maior_igual = OP_LOG_BT_E
+
+    '''
+    expressao_booleana : expressao OP_LOG_BT_E expressao
+                       | expressao OP_LOG_LT_E expressao
+                       | expressao OP_LOG_EQUAL expressao
+                       | expressao OP_LOG_DIFF expressao
+                       | expressao OP_LOG_LT expressao
+                       | expressao OP_LOG_BT expressao
+    '''
+
+    if p.slice[2].type == 'OP_LOG_BT_E':
+        p[0] = Node('exp_boolean', children = [p[1],p[3]], leaf = 'maior ou igual a', line = p.lineno(1))
+    elif p.slice[2].type == 'OP_LOG_LT_E':
+        p[0] = Node('exp_boolean', children = [p[1],p[3]], leaf = 'menor ou igual a', line = p.lineno(1))
+    elif p.slice[2].type == 'OP_LOG_EQUAL':
+        p[0] = Node('exp_boolean', children = [p[1],p[3]], leaf = 'igual a', line = p.lineno(1))
+    elif p.slice[2].type == 'OP_LOG_DIFF':
+        p[0] = Node('exp_boolean', children = [p[1],p[3]], leaf = 'diferente de', line = p.lineno(1))
+    elif p.slice[2].type == 'OP_LOG_BT':
+        p[0] = Node('exp_boolean', children = [p[1],p[3]], leaf = 'maior que', line = p.lineno(1))
+    elif p.slice[2].type == 'OP_LOG_LT':
+        p[0] = Node('exp_boolean', children = [p[1],p[3]], leaf = 'menor que', line = p.lineno(1))
+
+def p_atribuicao(p):
+
+    '''
+    atribuicao : ID OP_ATRIB expressao
+               | atribuicao KW_FUNC_ARGS_SEP atribuicao
+    '''
+
+    if p.slice[1].type == 'ID':
+        p[0] = Node('atribuicao', children = [p[1], p[3]], leaf = '=',line = p.lineno(1))
+    else:
+        p[0] = Node('atribuicao', children = [p[1], p[3]], leaf = ',', line = p.lineno(1))
+
+def p_lista_variaveis(p):
+
+    '''
+    lista_variaveis : ID KW_FUNC_ARGS_SEP lista_variaveis
+                    | ID
+    '''
+
+    if len(p) == 4:
+        p[0] = Node('lista_variaveis', children = [p[1], p[3]], leaf = ',', line = p.lineno(1))
+    else:
+        p[0] = Node('lista_variaveis', children = p[1], leaf = 'id', line = p.lineno(1))
+
+def p_declaracao_variavel_sem_valores(p):
+
+    '''
+    declaracao_variavel_sem_valores : tipo ID KW_FUNC_ARGS_SEP lista_variaveis
+                                    | tipo ID
+    '''
+
+    if len(p) == 5:
+        p[0] = Node('declaracao_sem_valor', children = [p[2],p[4]], leaf = p[1], line = p.lineno(2))
+    else:
+        p[0] = Node('declaracao_sem_valor', children = p[2], leaf = p[1], line = p.lineno(2))
+
+def p_declaracao(p):
+
+    '''
+    declaracao : tipo ID OP_ATRIB expression KW_FUNC_ARGS_SEP assignment
+               | tipo ID OP_ATRIB expressao
+    '''
+
+    if len(p) == 7:
+        p[0] = Node('declaracao', children = [p[2],p[4],p[6]], leaf = p[1], line = p.lineno(2))
+    else:
+        p[0] = Node('declaracao', children = [p[2],p[4]], leaf = p[1], line = p.lineno(2))
+
+def p_par(p):
+
+    '''
+    expressao : PAR_OPEN expressao PAR_CLOSE
+    '''
+
+    p[0] = p[2]
+
+def p_argumentos(p):
+
+    '''
+    argumentos : argumentos KW_FUNC_ARGS_SEP argumentos
+               | tipo ID
+    '''
+
+    if len(p) == 4:
+        p[0] = Node('argumentos', children = [p[1], p[3]], leaf = 'argumentos_multiplos')
+    else:
+        p[0] = Node('argumentos', children = [p[2], p[1]], leaf = 'argumento_unico', line = p.lineno(2))
+
+def p_tipos(p):
+
+    '''
+    tipo : KW_INT
+         | KW_FLOAT
+         | KW_STRING
+    '''
+
+    p[0] = p[1]
+
+def p_if(p):
+
+    '''
+    declaracao_if : KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_IF_CLOSE
+                  | KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_ELSE declaracao_if
+    '''
+
+    if len(p) == 6:
+        p[0] = Node('declaracao_if', children = [p[2],p[4]], leaf = 'if', line = p.lineno(1))
+    else:
+        p[0] = Node('declaracao_if', children = [p[2], p[4], p[7]], leaf = 'if_else', line = p.lineno(1))
+
+def p_printa(p):
+
+    '''
+    declaracao_print : KW_PRINT parametros KW_END_LINE
+    '''
+
+    p[0] = Node('print', children = p[2], leaf = p[1], line = p.lineno(1))
+
+def p_ler(p):
+
+    '''
+    declaracao_ler : KW_INPUT ID
+    '''
+
+    p[0] = Node('read', children = p[2], leaf = p[1], line = p.lineno(1))
+
+def p_for(p):
+
+    '''
+    declaracao_for : KW_FOR ID EM expressao FACA lista_declaracoes KW_CLOSE
+    '''
+
+    p[0] = Node('for', children = [p[2],p[4],p[6]], leaf = 'for', line = p.lineno(2))
+
+def p_while(p):
+
+    '''
+    declaracao_while : KW_WHILE expressao_booleana FACA lista_declaracoes KW_CLOSE
+    '''
+
+    p[0] = Node('while', children = [p[2],p[4]], leaf = 'while', line = p.lineno(1))
+
+def p_funcao(p):
+
+    '''
+    declaracao_funcao : KW_FUNCTION ID KW_FUNC_OPEN lista_declaracoes KW_CLOSE
+    '''
+
+    p[0] = Node('declaracao_funcao', children = p[4],leaf = p[2], line = p.lineno(1))
+
+def p_funcao_argumentos(p):
+
+    '''
+    declaracao : KW_FUNCTION ID KW_FUNC_OPEN_ARGS argumentos KW_FUNC_OPEN lista_declaracoes KW_CLOSE KW_END_LINE
+    '''
+
+    p[0] = Node('declaracao_funcao', children = [p[4],p[6]], leaf = p[2], line = p.lineno(1))
+
+def p_function_call(p):
+
+    '''
+    expressao : ID KW_FUNC_OPEN_ARGS parametros
+    '''
+
+    p[0] = Node('chamada_funcao', children = p[3], leaf = p[1], line = p.lineno(1))
+
+def p_return(p):
+
+    '''
+    retorna : KW_RETURN expressao
+    '''
+
+    p[0] = Node('return', children = p[2], leaf = p[1], line = p.lineno(1))
+
+def p_parametros(p):
+
+    '''
+    parametros : expressao
+               | parametros KW_FUNC_ARGS_SEP parametros
+    '''
+
+    if len(p) == 2:
+        p[0] = Node('parametro', children = p[1], leaf ='parametros')
+    else:
+        p[0] = Node('parametros', children = [p[1], p[3]], leaf='parametros')
+
+#Se passou por todas as regras e não casou com nenhuma, então está errado
 def p_error(p):
-    print("Syntax error in input!")
+    print("Erro de sintaxe!")
 
 parser = yacc.yacc()
 
-with open("Teste.txt", "r") as arquivo:
-    for line in arquivo:
-        result = parser.parse(line)
-
-print(result)
+codigo = open(sys.argv[1]).read()
+ast = parser.parse(codigo)
+print(ast.pretty())
