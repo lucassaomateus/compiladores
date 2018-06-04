@@ -69,14 +69,14 @@ def p_declaracao(p):    #Transforma as declarações nos tipos de funções da n
                         #Exemplo: for, if, while
     '''
     declaracao : expressao KW_END_LINE
+               | declaracao KW_END_LINE
                | declaracao_if KW_END_LINE
                | declaracao_for KW_END_LINE
                | declaracao_while KW_END_LINE
                | declaracao_print
                | declaracao_ler KW_END_LINE
-               | declaracao KW_END_LINE
-               | declaracao_variavel_sem_valores KW_END_LINE
                | atribuicao KW_END_LINE
+               | declaracao_variavel_sem_valores KW_END_LINE
                | expressao_booleana KW_END_LINE
                | declaracao_funcao KW_END_LINE
                | retorna KW_END_LINE
@@ -97,6 +97,7 @@ def p_operacoes_binarias(p):
               | KW_INT
               | KW_FLOAT
               | KW_STRING
+              | boolean
               | expressao_booleana
               | ID
     '''
@@ -115,6 +116,8 @@ def p_operacoes_binarias(p):
         p[0] = Node('valor', children = p[2], leaf = '++', line = p.lineno(2))
     elif p.slice[1].type == 'OP_DEC':
         p[0] = Node('valor', children = p[2], leaf = '--', line = p.lineno(2))
+    elif p.slice[1].type == 'boolean':
+        p[0] = Node('value', children=p[1], leaf='boolean', line=p.lineno(1))
     elif p.slice[1].type == 'expressao':
         p[0] = Node('operacao_binaria', children = [p[1], p[3]], leaf = p[2], line = p.lineno(2))
 
@@ -132,6 +135,7 @@ def p_expressao_booleana(p):
                        | expressao OP_LOG_DIFF expressao
                        | expressao OP_LOG_LT expressao
                        | expressao OP_LOG_BT expressao
+                       | expressao OP_LOG_OR expressao
     '''
 
     if p.slice[2].type == 'OP_LOG_BT_E':
@@ -142,10 +146,12 @@ def p_expressao_booleana(p):
         p[0] = Node('exp_boolean', children = [p[1],p[3]], leaf = 'igual a', line = p.lineno(1))
     elif p.slice[2].type == 'OP_LOG_DIFF':
         p[0] = Node('exp_boolean', children = [p[1],p[3]], leaf = 'diferente de', line = p.lineno(1))
-    elif p.slice[2].type == 'OP_LOG_BT':
-        p[0] = Node('exp_boolean', children = [p[1],p[3]], leaf = 'maior que', line = p.lineno(1))
     elif p.slice[2].type == 'OP_LOG_LT':
         p[0] = Node('exp_boolean', children = [p[1],p[3]], leaf = 'menor que', line = p.lineno(1))
+    elif p.slice[2].type == 'OP_LOG_BT':
+        p[0] = Node('exp_boolean', children = [p[1],p[3]], leaf = 'maior que', line = p.lineno(1))
+    elif p.slice[2].type == 'OP_LOG_OR':
+        p[0] = Node('boolean_exp', children=[p[1],p[3]], leaf='ou',line=p.lineno(1))
 
 def p_boolean(p):
 
@@ -168,61 +174,37 @@ def p_atribuicao(p):
     else:
         p[0] = Node('atribuicao', children = [p[1], p[3]], leaf = ',', line = p.lineno(1))
 
-def p_lista_variaveis(p):
-
-    '''
-    lista_variaveis : ID VIRGULA lista_variaveis
-                    | ID
-    '''
-
-    if len(p) == 4:
-        p[0] = Node('lista_variaveis', children = [p[1], p[3]], leaf = ',', line = p.lineno(1))
-    else:
-        p[0] = Node('lista_variaveis', children = p[1], leaf = 'id', line = p.lineno(1))
-
 def p_declaracao_sem_valores(p):
 
     '''
-    declaracao_variavel_sem_valores : tipo ID VIRGULA lista_variaveis
-                                    | tipo ID
+    declaracao_variavel_sem_valores : tipo ID
     '''
 
-    if len(p) == 5:
-        p[0] = Node('declaracao_sem_valor', children = [p[2],p[4]], leaf = p[1], line = p.lineno(2))
-    else:
-        p[0] = Node('declaracao_sem_valor', children = p[2], leaf = p[1], line = p.lineno(2))
+    p[0] = Node('declaracao_sem_valor', children = p[2], leaf = p[1], line = p.lineno(2))
 
 def p_criacao_variavel(p):
 
     '''
-    criacao_variavel : tipo ID OP_ATRIB expressao VIRGULA atribuicao
-               | tipo ID OP_ATRIB expressao
+    criacao_variavel : tipo ID OP_ATRIB expressao
     '''
 
-    if len(p) == 7:
-        p[0] = Node('declaracao', children = [p[2],p[4],p[6]], leaf = p[1], line = p.lineno(2))
-    else:
-        p[0] = Node('declaracao', children = [p[2],p[4]], leaf = p[1], line = p.lineno(2))
+    p[0] = Node('declaracao', children = [p[2],p[4]], leaf = p[1], line = p.lineno(2))
 
-def p_par(p):
+def p_criacao_variaveis(p):
+
+    '''
+    criacao_variaveis : tipo ID OP_ATRIB expressao VIRGULA atribuicao
+    '''
+
+    p[0] = Node('declaracao', children = [p[2],p[4],p[6]], leaf = p[1], line = p.lineno(2))
+
+def p_parenteses(p):
 
     '''
     expressao : PAR_OPEN expressao PAR_CLOSE
     '''
 
     p[0] = p[2]
-
-def p_argumentos(p):
-
-    '''
-    argumentos : argumentos VIRGULA argumentos
-               | tipo ID
-    '''
-
-    if len(p) == 4:
-        p[0] = Node('argumentos', children = [p[1], p[3]], leaf = 'argumentos_multiplos')
-    else:
-        p[0] = Node('argumentos', children = [p[2], p[1]], leaf = 'argumento_unico', line = p.lineno(2))
 
 def p_tipos(p):
 
@@ -240,13 +222,17 @@ def p_if(p):
 
     '''
     declaracao_if : KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_CLOSE
-                  | KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_ELSE declaracao_if
     '''
 
-    if len(p) == 6:
-        p[0] = Node('declaracao_if', children = [p[2],p[4]], leaf = 'if', line = p.lineno(1))
-    else:
-        p[0] = Node('declaracao_if', children = [p[2], p[4], p[7]], leaf = 'if_else', line = p.lineno(1))
+    p[0] = Node('declaracao_if', children = [p[2],p[4]], leaf = 'if', line = p.lineno(1))
+
+def p_if_else(p):
+
+    '''
+    declaracao_if : KW_IF expressao_booleana KW_IF_OPEN lista_declaracoes KW_ELSE lista_declaracoes KW_CLOSE
+    '''
+
+    p[0] = Node('if_statement', children=[p[2], p[4], p[7]], leaf='if/else', line = p.lineno(1))
 
 def p_printa(p):
 
@@ -267,7 +253,7 @@ def p_ler(p):
 def p_for(p):
 
     '''
-    declaracao_for : KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE KW_END_LINE
+    declaracao_for : KW_FOR_OPEN ID EM expressao FACA lista_declaracoes KW_CLOSE
     '''
 
     p[0] = Node('for', children = [p[2],p[4],p[6]], leaf = 'for', line = p.lineno(2))
@@ -291,7 +277,7 @@ def p_funcao(p):
 def p_funcao_argumentos(p):
 
     '''
-    declaracao_funcao : KW_FUNCTION ID KW_FUNC_OPEN_ARGS argumentos KW_FUNC_OPEN lista_declaracoes KW_CLOSE KW_END_LINE
+    declaracao_funcao : KW_FUNCTION ID KW_FUNC_OPEN_ARGS lista_declaracoes KW_CLOSE
     '''
 
     p[0] = Node('declaracao_funcao', children = [p[4],p[6]], leaf = p[2], line = p.lineno(1))

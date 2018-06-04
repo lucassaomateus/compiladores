@@ -40,8 +40,8 @@ reserved = {
     'define'                : 'KW_FUNCTION',
     'com'                   : 'KW_FUNC_OPEN_ARGS',
     'eh'                    : 'OP_ATRIB',
-    'agora_argumentos'      : 'PAR_OPEN',
-    'deu_de_argumentos'     : 'PAR_CLOSE',
+    '('                     : 'PAR_OPEN',
+    ')'                     : 'PAR_CLOSE',
 }
 
 tokens = [
@@ -56,7 +56,7 @@ tokens = [
 ]+ (list(reserved.values()))
 
 digit = [0-9]
-t_KW_END_LINE = r';'
+t_KW_END_LINE = r'\;'
 t_VIRGULA = r','
 t_OP_LOG_AND = r'e'
 t_ignore  = ' \t|\n';   #pula linhas e espaços do codigo fonte
