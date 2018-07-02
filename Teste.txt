@@ -1,11 +1,11 @@
 real y eh 123,8;
-leia x;  # Só um argumento
+leia x; # Só um argumento
 texto mensagem eh "Ola, mundo";
-
+y eh 10 mais 3;
 se x eh menor ou igual a 10 entao
    decrementa x;
    y eh x vezes 10,5;
-senão se x eh maior que 20 entao
+senao se x eh maior que 20 entao
    incrementa x;
 e deu;
 
@@ -15,7 +15,7 @@ define soma com int x, int y como
 e deu;
 
 mostra "Aqui ", mensagem, x, y;
-z eh soma com x, y;
+z eh x soma y;
 
 x eh x mais soma com z, w;
 mostra soma com x2, y;

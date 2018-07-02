@@ -1,18 +1,16 @@
 import numpy as np
 
+
 class tac:
 
-    def __init__(res, arg1, op, arg2):
-        self.res = res
-        self.arg1 = arg1
-        self.op = op
-        self.arg2 = arg2
+    def __init__(self, res, arg1, op, arg2):
+        self.res = str(res)
+        self.arg1 = str(arg1)
+        self.op = str(op)
+        self.arg2 = str(arg2)
 
-    def print_tac(self):
-        return self.res + self.arg1 + self.op + self.arg2
-
-def print_inst_tac(arquivo, tac):
-    arquivo.write(print_tac(tac))
+    def print_tac(self, arquivo):
+        arquivo.write(self.res + " " + self.arg1 + " " + self.op + " " + self.arg2 + " " + "\n")
 
 '''
  Esse trecho de código acima corresponde as funções do arquivo lista.h
@@ -32,22 +30,20 @@ class entry_t:
     def print_entry(self):
         return self.name + str(self.type) + str(self.size) + str(self.desloc) + str(self.extra)
 
-def hash(name):
-    '''
-    Perguntar ao professor se eu preciso usar aquela função hash dos arquivos
-    disponibilizados, ou se posso usar uma tipo md5
-    '''
+def hash_221(name):
+    result = hash(name) % 221
+    print (result)
+    return result
 
 def init_table():
     lista_tabela = np.zeros(221)
     return lista_tabela
 
 def lookup_table(lista_tabela, name):
-    return lista_tabela.where(lista_tabela.name = name)
+    return lista_tabela.where(name)
 
 def insert_table(lista_tabela, entrada):
-    #Avisar professor que tem erro no codigo original nessa parte
-    indice = hash(entrada.nome)
+    indice = hash_221(entrada.res) #NOME == RES?
     if lista_tabela[indice] is not None:
         return False
     else:
@@ -58,8 +54,8 @@ def insert_table(lista_tabela, entrada):
         '''
         return True
 
-def print_table(lista_tabela, arquivo):
-    for name in lista_tabela.name
+#def print_table(lista_tabela, arquivo):
+    #for name in lista_tabela.name
 
 def free_table(lista_tabela):
     aux_lista_tabela = np.zeros(len(lista_tabela))

@@ -1,5 +1,6 @@
 from ply import yacc
 from Analisador_Lexico import tokens
+from Trabalho_3 import *
 import sys
 
 class Node:
@@ -84,7 +85,7 @@ def p_declaracao(p):    #Transforma as declarações nos tipos de funções da n
 
     p[0] = p[1]
 
-def p_operacoes_binarias(p):
+def p_operacoes_aritmetica(p):
 
     '''
     expressao : expressao OP_ADD expressao
@@ -105,7 +106,7 @@ def p_operacoes_binarias(p):
     if p.slice[1].type == 'ID':
         p[0] = Node('valor', children = p[1], leaf = 'id', line = p.lineno(1))
     elif p.slice[1].type == 'expressao_booleana':
-        p[0] = Node('value', children = p[1], leaf = 'exp_bool', line = p.lineno(1))
+        p[0] = Node('valor', children = p[1], leaf = 'exp_bool', line = p.lineno(1))
     elif p.slice[1].type == 'KW_INT':
         p[0] = Node('valor', children = p[1], leaf = 'int', line = p.lineno(1))
     elif p.slice[1].type == 'KW_FLOAT':
@@ -119,8 +120,11 @@ def p_operacoes_binarias(p):
     elif p.slice[1].type == 'boolean':
         p[0] = Node('value', children=p[1], leaf='boolean', line=p.lineno(1))
     elif p.slice[1].type == 'expressao':
-        p[0] = Node('operacao_binaria', children = [p[1], p[3]], leaf = p[2], line = p.lineno(2))
-
+        p[0] = Node('operacao_aritmetica', children = [p[1], p[3]], leaf = p[2], line = p.lineno(2))
+        aritmetica = tac(p[0], p[1], p[2], p[3])
+        bool = insert_table(tabela, aritmetica)
+        aritmetica.print_tac(codigo_tac)
+        
 def p_expressao_booleana(p):
 
     #menor_que = OP_LOG_LT
@@ -317,5 +321,8 @@ def p_error(p):
 parser = yacc.yacc()
 
 codigo = open(sys.argv[1]).read()
+tabela = init_table()
+codigo_tac = open("tac.txt", "w")
 ast = parser.parse(codigo)
+
 print(ast.pretty())

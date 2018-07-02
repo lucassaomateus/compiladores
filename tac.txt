@@ -1,0 +1,2 @@
+(operacao_aritmetica mais [(valor id [x]), (valor id [y])]) (valor id [x]) mais None 
+(operacao_aritmetica mais [(valor id [x]), (chamada_funcao soma [(parametros parametros [(parametro parametros [(valor id [z])]), (parametro parametros [(valor id [w])])])])]) (valor id [x]) mais None 
