@@ -2,6 +2,7 @@ from ply import yacc
 from Analisador_Lexico import tokens
 from Trabalho_3 import *
 import sys
+import re
 
 class Node:
     def __init__(self, type, children=None, leaf=None, line=None):
@@ -45,6 +46,21 @@ precedence = (
     ('left','PAR_OPEN', 'PAR_CLOSE'),
     ('left','OP_EXP')
 )
+
+def qual_op(p, tmp1, tmp2):
+
+    if(p.slice[2].type == 'OP_ADD'):
+        re.split('mais ,', tmp1)
+        re.split('mais ,', tmp2)
+    if(p.slice[2].type == 'OP_SUB'):
+        re.split('menos ,', tmp1)
+        re.split('menos ,', tmp2)
+    if(p.slice[2].type == 'OP_MUL'):
+        re.split('vezes ,', tmp1)
+        re.split('vezes ,', tmp2)
+    if(p.slice[2].type == 'OP_DIV'):
+        re.split('dividido_por ,', tmp1)
+        re.split('dividido_por ,', tmp2)
 
 def p_programa(p):      #Ponto inicial da derivação do codigo
                         #Deriva em uma lista de declarações
@@ -120,11 +136,40 @@ def p_operacoes_aritmetica(p):
     elif p.slice[1].type == 'boolean':
         p[0] = Node('value', children=p[1], leaf='boolean', line=p.lineno(1))
     elif p.slice[1].type == 'expressao':
-        p[0] = Node('operacao_aritmetica', children = [p[1], p[3]], leaf = p[2], line = p.lineno(2))
-        aritmetica = tac(p[0], p[1], p[2], p[3])
-        bool = insert_table(tabela, aritmetica)
-        aritmetica.print_tac(codigo_tac)
-        
+
+        p[0] = Node("", children = [p[1], p[3]], leaf = p[2], line = p.lineno(2))
+
+        lixo = dict.fromkeys(map(ord, 'msvalor id()[]e'''), None)
+
+        temp_arg1 = str(p[1])
+        temp_arg1 = temp_arg1.translate(lixo)
+
+        temp_arg2 = str(p[3])
+        temp_arg2 = temp_arg2.translate(lixo)
+        qual_op(p, temp_arg1, temp_arg2)
+        print("TEMP1 " + temp_arg1)
+        print("TEMP2 " + temp_arg2)
+
+        if (len(temp_arg1) is 1) and (len(temp_arg2) is 1):
+            aritmetica = tac(temp_arg1 + ":=", temp_arg1, p[2], temp_arg2)
+            aritmetica.print_tac(codigo_tac)
+
+        if len(temp_arg1) > 1:
+            if len(temp_arg2) > 1:
+                aritmetica1 = tac("Tmp1", temp_arg1[1], p[2], temp_arg1[2])
+                aritmetica1.print_tac(codigo_tac)
+                aritmetica2 = tac("Tmp2", temp_arg2[1], p[2], temp_arg2[2])
+                aritmetica2.print_tac(codigo_tac)
+                result = tac(temp_arg1[1], "Tmp1", p[2], "Tmp2")
+                result.print_tac(codigo_tac)
+            else:
+                result = tac("Res", temp_arg1[0], p[2], temp_arg2[0])
+                result.print_tac(codigo_tac)
+
+        if len(temp_arg2) > 1:
+            aritmetica2 = tac("tmp", temp_arg1[0], p[2], temp_arg2[2])
+            aritmetica2.print_tac(codigo_tac)
+
 def p_expressao_booleana(p):
 
     #menor_que = OP_LOG_LT
@@ -181,10 +226,19 @@ def p_atribuicao(p):
 def p_declaracao_sem_valores(p):
 
     '''
-    declaracao_variavel_sem_valores : tipo ID
+    declaracao_variavel_sem_valores : KW_FLOAT ID
+                                    | KW_INT ID
     '''
 
-    p[0] = Node('declaracao_sem_valor', children = p[2], leaf = p[1], line = p.lineno(2))
+    if p.slice[1].type == 'KW_FLOAT':
+        p[0] = Node('declaracao_sem_valor', children = p[2], leaf = p[1], line = p.lineno(2))
+        declaracao = entry_t(str(p[2]), str(p[1]), "8", "8")
+        declaracao.print_declaracao(codigo_tac)
+
+    if p.slice[1].type == 'KW_INT':
+        p[0] = Node('declaracao_sem_valor', children = p[2], leaf = p[1], line = p.lineno(2))
+        declaracao = entry_t(str(p[2]), str(p[1]), "4", "4")
+        declaracao.print_declaracao(codigo_tac)
 
 def p_criacao_variavel(p):
 

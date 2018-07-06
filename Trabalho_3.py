@@ -10,6 +10,7 @@ class tac:
         self.arg2 = str(arg2)
 
     def print_tac(self, arquivo):
+        print (self.res + " " + self.arg1 + " " + self.op + " " + self.arg2 + " " + "\n")
         arquivo.write(self.res + " " + self.arg1 + " " + self.op + " " + self.arg2 + " " + "\n")
 
 '''
@@ -20,15 +21,18 @@ assim desnecessário implementar algumas funções que estão la naquele arquivo
 
 class entry_t:
 
-    def __init__(name, type, size, desloc, extra):
+    def __init__(self, name, type, size, desloc):
         self.name = name
         self.type = type
         self.size = size
         self.desloc = desloc
-        self.extra = extra
 
     def print_entry(self):
         return self.name + str(self.type) + str(self.size) + str(self.desloc) + str(self.extra)
+
+    def print_declaracao(self, arquivo):
+        print (self.name + " " + self.type + " " + self.size + " " + self.desloc + " " + "\n")
+        arquivo.write(self.name + " " + self.type + " " + self.size + " " + "\n")
 
 def hash_221(name):
     result = hash(name) % 221
@@ -43,7 +47,7 @@ def lookup_table(lista_tabela, name):
     return lista_tabela.where(name)
 
 def insert_table(lista_tabela, entrada):
-    indice = hash_221(entrada.res) #NOME == RES?
+    indice = hash_221(entrada.res)
     if lista_tabela[indice] is not None:
         return False
     else:
