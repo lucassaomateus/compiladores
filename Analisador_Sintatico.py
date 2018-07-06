@@ -232,13 +232,13 @@ def p_declaracao_sem_valores(p):
 
     if p.slice[1].type == 'KW_FLOAT':
         p[0] = Node('declaracao_sem_valor', children = p[2], leaf = p[1], line = p.lineno(2))
-        declaracao = entry_t(str(p[2]), str(p[1]), "8", "8")
-        declaracao.print_declaracao(codigo_tac)
+        declaracao = entry_t(str(p[1]), str(p[2]), "8", "8")
+        declaracao.print_declaracao(variaveis)
 
     if p.slice[1].type == 'KW_INT':
         p[0] = Node('declaracao_sem_valor', children = p[2], leaf = p[1], line = p.lineno(2))
-        declaracao = entry_t(str(p[2]), str(p[1]), "4", "4")
-        declaracao.print_declaracao(codigo_tac)
+        declaracao = entry_t(str(p[1]), str(p[2]), "4", "4")
+        declaracao.print_declaracao(variaveis)
 
 def p_criacao_variavel(p):
 
@@ -377,6 +377,7 @@ parser = yacc.yacc()
 codigo = open(sys.argv[1]).read()
 tabela = init_table()
 codigo_tac = open("tac.txt", "w")
+variaveis = open("declaracao.txt", "w")
 ast = parser.parse(codigo)
 
 print(ast.pretty())

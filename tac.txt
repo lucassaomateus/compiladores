@@ -1,4 +1,3 @@
-teste real 8 
 y:= y mais w 
 z:= z dividido_por w 
 tmp x mais z 
